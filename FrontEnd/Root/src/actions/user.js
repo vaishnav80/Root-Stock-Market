@@ -1,12 +1,27 @@
 import axios from "axios";
 
 import store from '../redux/store';
+import { logout } from "../redux/authSlice";
 
 const baseURL = "http://127.0.0.1:8000/"
 
 const api = axios.create({
     baseURL,
   });
+
+api.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        
+        if (error.response && error.response.status === 401) {
+            store.dispatch(logout());
+        }
+        return Promise.reject(error);
+    }
+);
+
   
 export const RegisterUser = async (first_name,email,password,confirm_password)=>{
     try {
@@ -23,10 +38,64 @@ export const RegisterUser = async (first_name,email,password,confirm_password)=>
 export const loginUser = async (email,password)=>{
     try{
         const response = await api.post('account/login/',{email,password})
-        console.log(response);
+        console.log(response,"user");
         return response
     }
     catch(error){
         return error.response
+    }
+}
+
+export const userProfile = async (token) => {
+    try {
+        const response = await api.get('account/profile', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        console.log(response.data,'Profile');
+        return response
+         
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+        
+    }
+};
+
+export const userLogout = async (access,refresh) => {
+    console.log(refresh);
+    
+    try {
+        const response = await api.post('account/logout/', 
+            { refresh_token: refresh },  
+            {
+                headers: {
+                    Authorization: `Bearer ${access}`
+                }
+            }
+        );
+        console.log(response.data.message);
+        return response;
+    } catch (error) {
+        console.log(error.response.data.message);
+        
+        return error.response
+    }
+}
+
+export const userList = async (access)=>{
+    console.log('dfs');
+    
+    try {
+        const response = await api.get('account/userlist',{
+        headers: {
+            Authorization: `Bearer ${access}`,
+        }    
+    })
+    console.log(response);
+    
+        return response
+    } catch (error) {
+        
     }
 }

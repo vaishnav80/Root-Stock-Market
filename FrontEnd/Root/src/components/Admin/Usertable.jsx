@@ -1,23 +1,55 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Edit, Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { active, login } from '../../redux/authSlice';
+import { userList } from '../../actions/user';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from 'react-router-dom';
 
 const UsersTable = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  
-  // Sample user data - expanded for full page
-  const users = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', phone: '+1 (555) 123-4567' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '+1 (555) 234-5678' },
-    { id: 3, name: 'Mike Johnson', email: 'mike@example.com', phone: '+1 (555) 345-6789' },
-    { id: 4, name: 'Sarah Williams', email: 'sarah@example.com', phone: '+1 (555) 456-7890' },
-    { id: 5, name: 'Alex Brown', email: 'alex@example.com', phone: '+1 (555) 567-8901' },
-   
-  ];
-
-  const handleEdit = (id) => {
+  const [search, setSearch] = useState('');
+  const auth = useSelector((state)=>state.auth)
+  const [users,setUser] =useState([])
+  const [tempData,setTemp] = useState({})
+  const [refresh,setRefresh] = useState(true)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  useEffect (()=>{
+    async function collect(){
+      const response = await userList(auth.token)
+      console.log(response);
+      console.log(response.data.user);
+      setUser(response.data.user)
+    }
+    collect()
+  },[refresh,navigate])
+  const handleEdit = async (id) => {
     console.log('Edit user:', id);
+      try {     
+      const response = await axios.patch(`http://127.0.0.1:8000/account/update/${id}/`, tempData, {
+        headers: {
+          Authorization: `Bearer ${auth.token}`,
+          "Content-Type": "multipart/form-data",
+        },}
+      )
+      setRefresh(!refresh)
+      console.log(response.data.active,'asdsdfdfsd');
+      dispatch(active(response.data.active))
+      toast.success(response.data.message);
+      
+    } catch (error) {
+      console.log(error);
+      
+      // console.log(error.response.data.errors);
+      
+    }
   };
-
+  const filteredUsers = users.filter(
+    (user) =>
+      user.first_name.toLowerCase().includes(search.toLowerCase()) ||
+      user.email.toLowerCase().includes(search.toLowerCase())
+  );
   return (
     <div className="min-h-screen flex flex-col bg-gray-900">
       {/* Fixed Header */}
@@ -28,8 +60,8 @@ const UsersTable = () => {
             <input
               type="text"
               placeholder="Search users..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               className="w-64 px-4 py-2 pl-10 bg-gray-700 border border-gray-600 rounded-md text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
             />
             <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -52,30 +84,31 @@ const UsersTable = () => {
                 Email
               </th>
               <th className="px-6 py-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                Phone
+                Status
               </th>
               <th className="px-6 py-4 text-right text-xs font-medium text-gray-300 uppercase tracking-wider">
                 Actions
               </th>
+              
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700 bg-gray-800">
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <tr
                 key={user.id}
                 className="hover:bg-gray-700 transition-colors"
               >
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  #{user.id}
+                  {user.id}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
-                  {user.name}
+                  {user.first_name}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
                   {user.email}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  {user.phone}
+                  {user.is_active ?<p className='text-green-500'>Active</p>  :<p className='text-red-600'> Deactive</p>}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-right">
                   <button
@@ -108,6 +141,10 @@ const UsersTable = () => {
           </div>
         </div>
       </div>
+      <Toaster
+  position="top-center"
+  reverseOrder={false}
+/>
     </div>
   );
 };

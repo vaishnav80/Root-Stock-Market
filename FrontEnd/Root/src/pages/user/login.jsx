@@ -3,30 +3,26 @@ import { loginUser } from "../../actions/user";
 import { login } from "../../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
-  const  auth  = useSelector((state) => state.auth);
+  const auth = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
-  useEffect(()=>{
-    console.log('ds');
-    
-    if (auth){
-      navigate('/')
-    }
+  const [error, setError] = useState(null);
 
-  },[auth])
   const loginSubmit = async (e) => {
     e.preventDefault();
     const response = await loginUser(email, password);
     if (response.status == 200) {
-      console.log(response.data.user);
-      dispatch(login(response.data.user));
-      navigate("/");
+      dispatch(login(response.data));
+      navigate("/", { replace: true });
     } else {
-      console.log(response);
+      const errorData = response.data;
+      setError(errorData.message);
     }
   };
   return (
@@ -50,6 +46,7 @@ const Login = () => {
           <p className="text-gray-400 text-center mb-8">
             Please sign in to your account
           </p>
+          <p className="text-rose-800 font-semibold text-lg">{error}</p>
           <form onSubmit={loginSubmit}>
             <div className="mb-6">
               <label className="block text-gray-400 mb-2">
@@ -90,23 +87,24 @@ const Login = () => {
               Create an account
             </a>
           </p>
-          <div className="flex justify-center mt-4">
-            <a
-              href="#"
-              className="text-gray-400 hover:text-purple-600 transition"
-            >
-              <i className="fab fa-facebook"></i>
-            </a>
-            <a
-              href="#"
-              className="ml-4 text-gray-400 hover:text-purple-600 transition"
-            >
-              <i class="fab fa-google" aria-hidden="true"></i>
-            </a>
-          </div>
+         
+          <p className="text-sm text-center text-gray-400">
+          Forgot your password?{" "}
+          <a
+            href="#"
+            className="font-medium text-gray-300 hover:underline"
+          >
+            Reset it
+          </a>
+        </p>
         </div>
       </div>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
     </div>
+   
   );
 };
 

@@ -31,64 +31,31 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField(max_length=15, blank=True, null=True)
     about = models.CharField(max_length=30, blank=True, null=True)
     city = models.CharField(max_length=50,blank=True, null=True)
-    
-    address = models.TextField(blank=True, null=True)
-    
-    DISTRICT_CHOICES = [
-        ('TVM', 'Thiruvananthapuram'),
-        ('KLM', 'Kollam'),
-        ('PTA', 'Pathanamthitta'),
-        ('ALP', 'Alappuzha'),
-        ('KTM', 'Kottayam'),
-        ('IDK', 'Idukki'),
-        ('EKM', 'Ernakulam'),
-        ('TSR', 'Thrissur'),
-        ('PKD', 'Palakkad'),
-        ('MLP', 'Malappuram'),
-        ('KKD', 'Kozhikode'),
-        ('WYD', 'Wayanad'),
-        ('KNR', 'Kannur'),
-        ('KSD', 'Kasaragod'),
-    ]
-    district = models.CharField(max_length=3, choices=DISTRICT_CHOICES, blank=True, null=True)
-    
-    STATE_CHOICES = [
-        ('KL', 'Kerala'),
-        ('TN', 'Tamil Nadu'),
-        ('KA', 'Karnataka'),
-       
-    ]
-    state = models.CharField(max_length=2, choices=STATE_CHOICES, blank=True, null=True)
-
+    address = models.TextField(max_length=100,blank=True, null=True)
+    district = models.CharField(max_length=30, blank=True, null=True)
+    state = models.CharField(max_length=20,  blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
-    
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
- 
     image = models.ImageField(
         upload_to='profile_images/', 
         blank=True, 
         null=True,
         help_text="Upload a profile image"
     )
-
     objects = CustomUserManager()
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name']
-
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
         ordering = ['-created_at'] 
-
     def __str__(self):
         return self.email
-
     def save(self, *args, **kwargs):
-        """Override save method to ensure email is always lowercase"""
         self.email = self.email.lower()
         super().save(*args, **kwargs)
+
+

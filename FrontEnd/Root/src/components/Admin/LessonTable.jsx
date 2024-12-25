@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Edit, Search, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
+import { addlesson, getlesson } from '../../actions/Lesson';
+import { useSelector } from 'react-redux';
 
 const LessonTable = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newLesson, setNewLesson] = useState('');
-
-  // Sample user data
+  const auth = useSelector((select)=>select.auth)
+  const [lesson,setLesson] = useState([])
+ 
   const users = [
     { id: 1, name: 'John Doe', email: 'john@example.com', phone: '+1 (555) 123-4567' },
     { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '+1 (555) 234-5678' },
@@ -14,16 +17,25 @@ const LessonTable = () => {
     { id: 4, name: 'Sarah Williams', email: 'sarah@example.com', phone: '+1 (555) 456-7890' },
     { id: 5, name: 'Alex Brown', email: 'alex@example.com', phone: '+1 (555) 567-8901' },
   ];
+  useEffect(()=>{
+    async function fetchlessons() {
+      const response = await getlesson(auth.token)
+      console.log(response);
+      setLesson(response.data.lesson)
+    }
+    fetchlessons()
+  },[])
 
-  const handleAddLesson = () => {
-    console.log('New Lesson Added:', newLesson);
+  const handleAddLesson =async () => {
+    const response = await addlesson(newLesson,auth.token)
+    console.log('New Lesson Added:',response);
     setIsModalOpen(false);
     setNewLesson('');
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-900">
-      {/* Fixed Header */}
+      
       <div className="bg-gray-800 border-b border-gray-700">
         <div className="h-16 flex items-center justify-between px-6">
           <h1 className="text-2xl font-bold text-gray-100">Lessons Management</h1>
@@ -46,7 +58,7 @@ const LessonTable = () => {
         </div>
       </div>
 
-      {/* Table Container */}
+     
       <div className="flex-1 overflow-auto">
         <table className="w-full">
           <thead className="sticky top-0 bg-gray-700">
@@ -63,16 +75,16 @@ const LessonTable = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700 bg-gray-800">
-            {users.map((user) => (
+            {lesson.map((ls) => (
               <tr
-                key={user.id}
+                key={ls.id}
                 className="hover:bg-gray-700 transition-colors"
               >
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                  #{user.id}
+                  {ls.id}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
-                  {user.name}
+                  {ls.heading}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-right">
                   <div className="flex justify-end gap-3">
@@ -112,7 +124,6 @@ const LessonTable = () => {
         </div>
       </div>
 
-      {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-gray-200 rounded-md p-6 shadow-lg w-96">
@@ -122,7 +133,7 @@ const LessonTable = () => {
               value={newLesson}
               onChange={(e) => setNewLesson(e.target.value)}
               placeholder="Enter lesson heading..."
-              className="w-full px-4 py-2 border border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 text-gray-900 focus:ring-blue-500"
             />
             <div className="flex justify-end gap-3">
               <button

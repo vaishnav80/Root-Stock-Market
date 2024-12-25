@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('id', 'email', 'first_name', 'last_name', 'phone', 'about', 
-                 'address', 'district', 'state', 'is_active', 'image')
+                 'address', 'district', 'state', 'is_active', 'image' ,'is_staff')
         read_only_fields = ('id', 'is_active')
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -30,7 +30,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             'first_name': {'required': True},
             'email': {'required': True}
         }
-    
+
     def validate_email(self, value):
         print('self')
         if CustomUser.objects.filter(email=value.lower()).exists():
@@ -45,7 +45,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        print('sdf')
+     
         validated_data.pop('confirm_password', None)
         return CustomUser.objects.create_user(**validated_data)
 
@@ -63,18 +63,31 @@ class LoginSerializer(serializers.Serializer):
         
         if not email or not password:
             raise serializers.ValidationError("Please provide both email and password")
+        
+        try:    
+            users = CustomUser.objects.get(email=email)
+        except:
+            raise  serializers.ValidationError({
+                "email": ["email"]
+            })
+        if len(password) <8 : 
+            raise  serializers.ValidationError({
+                "length": ["length"]
+            })
 
+        if not users.is_active:
+            raise serializers.ValidationError({
+                "disabled": ["disabled"]
+            })
+        
         user = authenticate(email=email, password=password)
+
         
         if not user:
             raise serializers.ValidationError({
-                "non_field_errors": ["Invalid email or password"]
+                "invalid": ["Invalid"]
             })
             
-        if not user.is_active:
-            raise serializers.ValidationError({
-                "non_field_errors": ["Account is disabled"]
-            })
         data['user'] = user
         return data
     
@@ -82,7 +95,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('first_name', 'last_name', 'phone', 'about', 
-                 'address', 'district', 'state', 'image')
+                 'address', 'district', 'state', 'image','is_active')
         
     def validate_phone(self, value):
         """Validate phone number format"""

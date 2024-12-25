@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../../components/User/Header";
 import Sidebar from "../../components/User/Sidebar";
 import Navbar from "../../components/User/Navbar";
@@ -17,8 +17,7 @@ import {
 import CompanyGraph from "../../components/User/CompanyGraph";
 import Footer from "../../components/User/Footer";
 import { useSelector } from "react-redux";
-
-// Register Chart.js components
+import { useNavigate } from "react-router-dom";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -31,6 +30,7 @@ ChartJS.register(
 
 const Dashboard = () => {
   const  auth  = useSelector((state) => state.auth);  
+  
   return (
     <div className="bg-black">
       <Header className="mt-96" />

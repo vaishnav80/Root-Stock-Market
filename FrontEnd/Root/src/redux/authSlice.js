@@ -4,7 +4,9 @@ const INITIAL_STATE = {
     name:'',
     email:'',
     token:'',
-    refreshToken:''
+    refreshToken:'',
+    is_active:false,
+    is_staff : false
 }
 
 const authSlicer = createSlice({
@@ -12,17 +14,29 @@ const authSlicer = createSlice({
     initialState:INITIAL_STATE,
     reducers:{
         login:(state,action)=>{
-            state.name=action.payload.first_name;
-            state.email=action.payload.email;
-            state.token=action.payload.token;
-            state.refreshToken=action.payload.refreshToken;
+            state.name=action.payload.user.first_name;
+            state.email=action.payload.user.email;
+            state.token=action.payload.tokens.access;
+            state.refreshToken=action.payload.tokens.refresh;
+            state.is_active = action.payload.user.is_active;
+            state.is_staff = action.payload.user.is_staff;
+        },
+        logout : (state,action)=>{
+            state.name=null;
+            state.email=null;
+            state.token=null;
+            state.refreshToken=null;
+            state.is_active=null;
+            state.is_staff = null;  
+        },
+        active : (state,action)=>{
+            state.is_active = action.payload
         }
-        
     }
 })
 
 
 
 
-export const{login} = authSlicer.actions;
+export const{login,logout,active} = authSlicer.actions;
 export default authSlicer.reducer;

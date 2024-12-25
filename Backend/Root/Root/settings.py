@@ -26,6 +26,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework', 
     'rest_framework_simplejwt', 
+    'rest_framework_simplejwt.token_blacklist',
+    'lessons'
 ]
 
 AUTH_USER_MODEL = 'account.CustomUser'
@@ -46,6 +48,14 @@ ROOT_URLCONF = 'Root.urls'
 
 CORS_ALLOW_ALL_ORIGINS = True  
 CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    'content-type',
+    'authorization',
+    'x-csrftoken',
+    'referer',
+]
+
 
 TEMPLATES = [
     {
@@ -126,5 +136,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
