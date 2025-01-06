@@ -27,12 +27,20 @@ INSTALLED_APPS = [
     'rest_framework', 
     'rest_framework_simplejwt', 
     'rest_framework_simplejwt.token_blacklist',
-    'lessons'
+    'lessons',
+    'allauth',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
+    'wallet',
+    'channels',
+    'stock',
+    'order'
 ]
 
 AUTH_USER_MODEL = 'account.CustomUser'
 
 MIDDLEWARE = [
+    "account.middleware.DisableCSRFOnAPIMiddleware",
     'corsheaders.middleware.CorsMiddleware', 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -41,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware'
 ]
 
 ROOT_URLCONF = 'Root.urls'
@@ -75,6 +84,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Root.wsgi.application'
 
+ASGI_APPLICATION = 'Root.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -87,9 +104,13 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
@@ -109,6 +130,42 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  
+EMAIL_PORT = 587  
+EMAIL_USE_TLS = True 
+EMAIL_HOST_USER = 'vaishnavpuzhakkal3@gmail.com' 
+EMAIL_HOST_PASSWORD = 'jqmk zzul gfbz znvl'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+SITE_ID = 1  
+LOGIN_REDIRECT_URL = 'http://localhost:5173'  
+LOGOUT_REDIRECT_URL = 'http://localhost:5173/login'  
+
+
+ACCOUNT_EMAIL_VERIFICATION = "none"  
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"  
+ACCOUNT_USERNAME_REQUIRED = True 
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '1057065425803-c62ar9pdargdcnbfiknhrm54ask29ufa.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    }
+}
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    
+]
 
 AUTH_PASSWORD_VALIDATORS = [
     {

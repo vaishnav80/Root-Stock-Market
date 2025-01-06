@@ -17,8 +17,10 @@ const CompanyGraph = () => {
   const fetchStockData = async () => {
     try {
       const response = await axios.get(
-        "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=RELIANCE.BSE&outputsize=full&apikey=demo"
+        "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=IBM&apikey=demo"
       );
+      console.log(response);
+      
       const stockData = response.data["Time Series (Daily)"];
       const metaData = response.data["Meta Data"];
 

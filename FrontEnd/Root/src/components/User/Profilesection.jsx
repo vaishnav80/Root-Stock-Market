@@ -12,18 +12,18 @@ const ProfileSection = () => {
   const [tempData, setTempData] = useState({});
   const [profileData, setProfileData] = useState({});
   const [image, setImage] = useState(true);
+  const [state,setState] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  console.log((userData));
+  
   
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    
-    console.log(file,'imageeeeee');
+  
       if (file) {
         const formData = new FormData();
-      console.log(image);
+
      
       
       formData.append("image", file);
@@ -36,8 +36,8 @@ const ProfileSection = () => {
           },
         });
         setImage(!image);
-        console.log(image);
-        console.log("Image uploaded successfully:", response.data);
+        
+        toast.success("Image uploaded successfully");
       } catch (error) {
         console.error("Error uploading image:", error);
       }
@@ -50,9 +50,9 @@ const ProfileSection = () => {
       
       const response = await userProfile(userData.token);
       if (response.status ==200){
-        console.log(response.data.user.first_name,'asdas');
+     
         setProfileData(response.data.user);
-        console.log(profileData,'dataaaa');
+        
         setTempData(prevData => ({
           ...prevData,
           first_name: response.data.user.first_name,
@@ -64,8 +64,6 @@ const ProfileSection = () => {
           state: response.data.user.state,
           district: response.data.user.district,
         }));
-        
-        console.log(profileData.first_name);
       }
       else if(response.status==401){
         dispatch(logout())
@@ -79,7 +77,7 @@ const ProfileSection = () => {
       navigate('/login')
     }
     
-  },[userData,navigate,image]);
+  },[userData,navigate,image,state]);
   const handleSave =async () => {
     setIsEditing(false);
     try {
@@ -89,10 +87,9 @@ const ProfileSection = () => {
           "Content-Type": "multipart/form-data",
         },}
       )
+      setState(!state)
     } catch (error) {
-      console.log(error.response.data.errors);
-      toast.error(error.response.data.errors);
-      
+      toast.error(error.response.data.errors);  
     }
     
     

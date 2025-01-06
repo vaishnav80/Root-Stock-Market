@@ -102,3 +102,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         if value and not value.isdigit():
             raise serializers.ValidationError("Phone number must contain only digits")
         return value
+    
+class PasswordResetSerializer(serializers.Serializer):
+    uid = serializers.CharField()
+    token = serializers.CharField()
+    password = serializers.CharField(write_only=True, min_length=8)

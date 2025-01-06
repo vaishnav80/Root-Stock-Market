@@ -6,18 +6,26 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import logout
 from rest_framework_simplejwt.exceptions import TokenError
 from .models import CustomUser
-from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserUpdateSerializer
+from .serializers import UserSerializer, RegisterSerializer, LoginSerializer, UserUpdateSerializer ,PasswordResetSerializer
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_decode
+from django.middleware.csrf import get_token
+from django.http import JsonResponse
+
 
 class RegisterView(APIView):
     permission_classes = [AllowAny]
     
     def post(self, request):
-        print('register')
+        
         serializer = RegisterSerializer(data=request.data)
-        print(serializer)
+      
         if serializer.is_valid():
             try:
-                print('dsfsd')
+                
                 user = serializer.save()
                 refresh = RefreshToken.for_user(user)
                 return Response({
@@ -58,12 +66,12 @@ class LoginView(APIView):
     def post(self, request):
 
         serializer = LoginSerializer(data=request.data)
-        print(serializer)
+      
         try:
             if not serializer.is_valid():
-                print(serializer.errors,'ertertert')
+            
                 error_msg = serializer.errors
-                print(error_msg,'error')
+           
                 if 'email' in error_msg:
                     return Response({
                         "status": "error",
@@ -139,7 +147,6 @@ class LogoutView(APIView):
             if refresh_token:
                 try:
                     token = RefreshToken(refresh_token)
-                    print(f"Token is valid: {token}")
                     token.blacklist()
                     logout(request)
                     return Response({
@@ -167,7 +174,6 @@ class UserDetailView(APIView):
 
     def get(self, request):
         try:
-            print(request.user,'userrrrr')
             serializer = UserSerializer(request.user)
             return Response({
                 "user": serializer.data
@@ -183,7 +189,7 @@ class UserDetailView(APIView):
             serializer = UserUpdateSerializer(request.user, data=request.data, partial=True)
             print(serializer)
             if serializer.is_valid():
-                print('ss')
+               
                 serializer.save()
                 return Response({
                     "message": "Profile updated successfully",
@@ -218,7 +224,7 @@ class Userlist(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request):
-        print('asdsd')
+        
         try:
             users = CustomUser.objects.exclude(is_staff =True).order_by('id')
             
@@ -246,3 +252,93 @@ class Updateuser(APIView):
         user.save()
 
         return Response({"message": f"User {user.email} status set to {user.is_active}.","active":user.is_active }, status=status.HTTP_200_OK)
+    
+
+class Forgot_password(APIView):
+
+    permission_classes = [AllowAny]
+
+    def post(self,request):
+        email  = request.data.get('email')
+        try:
+            user = CustomUser.objects.get(email = email)
+            token_generator = PasswordResetTokenGenerator()
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = token_generator.make_token(user)
+            frontend_url = "http://localhost:5173/resetPassword"
+            reset_link = f"{frontend_url}?uid={uid}&token={token}"
+            subject = "Password Reset Request"
+            message = f"Hi {user.first_name},\n\nClick the link below to reset your password:\n{reset_link}\n\nIf you did not request a password reset, ignore this email."
+            print(message)
+            send_mail(subject, message, "project2root@gmail.com", [email])
+            print('d')
+            return Response({"message" :"user found "}, status=status.HTTP_200_OK)
+        except:
+            return Response({"message" :"user not found please login first"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class PasswordResetView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        serializer = PasswordResetSerializer(data=request.data)
+        if serializer.is_valid():
+            uid = serializer.validated_data.get("uid")
+            token = serializer.validated_data.get("token")
+            new_password = serializer.validated_data.get("password")
+            try:
+
+                user_id = urlsafe_base64_decode(uid).decode()
+                user = CustomUser.objects.get(pk=user_id)
+                
+           
+                token_generator = PasswordResetTokenGenerator()
+                if not token_generator.check_token(user, token):
+                    return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
+
+                user.set_password(new_password)
+                user.save()
+                return Response({"message": "Password reset successful"}, status=status.HTTP_200_OK)
+            
+            except (user.DoesNotExist, ValueError):
+                return Response({"error": "Invalid UID"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+from google.oauth2 import id_token   # type: ignore
+from google.auth.transport import requests   # type: ignore
+import jwt
+
+class GoogleLoginAPIView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        token = request.data.get("token")
+        decoded = jwt.decode(token, options={"verify_signature": False})
+        try:
+            email = decoded['email']
+            name = decoded['name']
+            user,create = CustomUser.objects.get_or_create(email=email,defaults={'first_name' :name,'is_active': True })
+            refresh = RefreshToken.for_user(user)
+            serializer = UserSerializer(user)
+            return Response({
+                "status": "success",
+                "message": "Google login successful",
+                "user": {"id": user.id, "email": user.email,"first_name":user.first_name,"is_staff":user.is_staff,"is_active":user.is_active},
+                "tokens": {
+                    "refresh": str(refresh),
+                    "access": str(refresh.access_token),
+                }
+            }, status=status.HTTP_200_OK)
+            
+            
+        except ValueError:
+            return Response({"error": "Invalid token"}, status=400)
+
+
+class CheckStatus(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        return Response({"is_active": request.user.is_active})
+
+

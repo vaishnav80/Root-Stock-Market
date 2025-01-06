@@ -7,12 +7,32 @@ const baseURL = "http://127.0.0.1:8000/"
 
 const api = axios.create({
     baseURL,
+
   });
 
 api.interceptors.response.use(
-    (response) => {
+    async (response) => {
+        try {
+            console.log(store.getState().auth.tokenoken,'fgsdfg');
+            
+          const statusResponse = await axios.get(`${baseURL}account/check-status/`, {
+            headers: {
+              Authorization: `Bearer ${store.getState().auth.token}`, 
+            },
+            withCredentials: true,
+          });
+          store.dispatch(active(statusResponse.data.is_active));
+          if (!statusResponse.data.is_active) {
+            store.dispatch(logout());
+          }
+        } catch (Error) {
+            if (  Error.status === 401) {
+                store.dispatch(logout());
+            }
+        }
+    
         return response;
-    },
+      },
     (error) => {
         
         if (error.response && error.response.status === 401) {
@@ -96,6 +116,30 @@ export const userList = async (access)=>{
     
         return response
     } catch (error) {
+        
+    }
+}
+
+export const forgotPassword = async (email)=>{
+    try {
+        const response = await api.post('account/forgot_password/',{email})
+        console.log(response);
+        return response
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+export const resetPassword = async (u_id,token,password)=>{
+    console.log('sdfsdf');
+    
+    try {
+        const response = await api.post('account/reset-password/',{u_id,token,password})
+        console.log(response);
+        
+    } catch (error) {
+        console.log(error);
         
     }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <div className="flex space-x-10 p-2 text-white h-32  mx-8">
+    <div className="flex space-x-10 p-2 text-white h-32  mx-8 bg-black">
       {/* User Profile Card */}
       <div className="bg-gradient-to-r from-green-400 to-blue-500 p-2 rounded-lg flex flex-col items-center h-28 w-1/3">
         <div className="w-16 h-16 bg-gray-300 rounded-full mb-4"></div>

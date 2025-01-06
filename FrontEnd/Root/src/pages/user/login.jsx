@@ -4,6 +4,8 @@ import { login } from "../../redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 const Login = () => {
   const auth = useSelector((state) => state.auth);
@@ -25,6 +27,30 @@ const Login = () => {
       setError(errorData.message);
     }
   };
+  const handleSuccess = async (response) => {
+    const idToken = response.credential;
+    
+    try {
+      const res = await axios.post("http://127.0.0.1:8000/account/google-login/", { token: idToken }
+      );
+
+      if (res.status === 200) {
+        console.log("Google login successful:", res.data);
+        dispatch(login(res.data));
+        navigate("/", { replace: true });
+      } else {
+        console.error("Google login failed:", res.data.error);
+      }
+    } catch (error) {
+      console.error("Google login failed:", error);
+    }
+  };
+
+
+  const handleError = () => {
+    console.error("Google Login Failed");
+  };
+
   return (
     <div className="min-h-screen flex">
       <div
@@ -87,11 +113,20 @@ const Login = () => {
               Create an account
             </a>
           </p>
+          <div className="flex justify-center mt-4">
+          <GoogleOAuthProvider clientId="1057065425803-c62ar9pdargdcnbfiknhrm54ask29ufa.apps.googleusercontent.com">
+      <div>
+      
+        <GoogleLogin onSuccess={handleSuccess} onError={handleError} />
+      </div>
+    </GoogleOAuthProvider>
+           
+          </div>
          
           <p className="text-sm text-center text-gray-400">
           Forgot your password?{" "}
           <a
-            href="#"
+            href="/forgotPassword"
             className="font-medium text-gray-300 hover:underline"
           >
             Reset it

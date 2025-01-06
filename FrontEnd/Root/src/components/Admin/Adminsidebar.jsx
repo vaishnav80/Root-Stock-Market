@@ -23,8 +23,8 @@ function Adminsidebar() {
          <Link to={'/admin/dashboard'}><button className="w-full py-5 my-5 mt-8 text-white border border-gray-500 rounded">Dashboard</button> </Link>
          <Link to={'/admin/userlist'}><button className="w-full py-5 my-5 text-white border border-gray-500 rounded">Users</button></Link> 
          <Link to={'/admin/lessons'}><button className="w-full py-5 my-5 text-white border border-gray-500 rounded">Lessons</button></Link>
-         <button className="w-full py-5 my-5 text-white border border-gray-500 rounded">Quiz</button> 
-         <button className="w-full py-5 my-5 text-white border border-gray-500 rounded">Support</button>
+         <Link to={'/admin/Quiz'}><button className="w-full py-5 my-5 text-white border border-gray-500 rounded">Quiz</button> </Link>
+         <Link to={'/admin/Support'}><button className="w-full py-5 my-5 text-white border border-gray-500 rounded">Support</button></Link>
           <button className="w-full py-5 my-5 text-white border border-gray-500 rounded" onClick={handleLogout}>LogOut</button>
            </div>
 

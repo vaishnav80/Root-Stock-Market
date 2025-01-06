@@ -41,8 +41,6 @@ const UsersTable = () => {
     } catch (error) {
       console.log(error);
       
-      // console.log(error.response.data.errors);
-      
     }
   };
   const filteredUsers = users.filter(

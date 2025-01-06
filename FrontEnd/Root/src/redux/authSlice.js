@@ -32,6 +32,7 @@ const authSlicer = createSlice({
         active : (state,action)=>{
             state.is_active = action.payload
         }
+        
     }
 })
 
