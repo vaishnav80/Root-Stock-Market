@@ -159,6 +159,8 @@ export const deleteContent = async(token,id)=>{
 
 export const editContent = async (token, formData, id) => {
     try {
+        console.log(formData,'formData');
+        
         const response = await api.patch(`lessons/content/${id}`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -167,6 +169,117 @@ export const editContent = async (token, formData, id) => {
         });
         return response;
     } catch (error) {
+        return error
+    }
+};
+
+
+export const getQuiz = async (token) => {
+    try {
+        const response = await api.get('lessons/quiz',{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response;
+    } catch (error) {
         return error.response || error;
     }
 };
+
+export const addQuiz = async (token,question,option,correct_answer) => {
+    try {
+        const response = await api.post('lessons/quiz/',{question,option,correct_answer},{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response;
+    } catch (error) {
+        return error.response || error;
+    }
+};
+
+export const updateQuiz = async (token,question,option,correct_answer,id) => {
+    try {
+        const response = await api.post(`lessons/quiz_edit/${id}`,{question,option,correct_answer},{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response;
+    } catch (error) {
+        return error.response || error;
+    }
+};
+
+
+export const deleteQuiz = async(token,id)=>{
+    try{ 
+        const response = await api.delete(`lessons/quiz_edit/${id}`,{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        return response
+    }
+    catch (error){
+        return error
+    }
+}
+
+export const getNews = async (token) => {
+    try {
+        const response = await api.get('news/news_data',{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response;
+    } catch (error) {
+        return error.response || error;
+    }
+};
+
+export const getQuizAttend = async (token) => {
+    try {
+        const response = await api.get('lessons/quiz_attend',{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response;
+    } catch (error) {
+        return error.response || error;
+    }
+};
+
+export  const postQuizAttend = async (token,question) =>{
+    try {
+         const response = await api.post('lessons/quiz_attend/',{question},{
+            headers:{
+                Authorization : `Bearer ${token}`,
+            }
+         })
+         return response
+    }
+    catch(error){
+        return error
+    }
+}
+
+
+export const UpdatedOrder = async (token,newOrder) => {
+    try {
+      const response = await api.post('lessons/update-order/', {newOrder},{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        
+      });
+  
+      return response
+    } catch (error) {
+      return error
+    }
+  };

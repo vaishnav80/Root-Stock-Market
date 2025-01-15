@@ -34,7 +34,9 @@ INSTALLED_APPS = [
     'wallet',
     'channels',
     'stock',
-    'order'
+    'order',
+    'news',
+    'contactus'
 ]
 
 AUTH_USER_MODEL = 'account.CustomUser'

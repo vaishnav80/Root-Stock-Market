@@ -8,6 +8,7 @@ from .models import Order
 from .serializers import *
 from django.db.models import F
 from wallet.models import Wallet,WalletTransaction
+
 class Orders(APIView):
 
     permission_classes = [IsAuthenticated]
@@ -18,6 +19,7 @@ class Orders(APIView):
         data['totalAmount'] = data['price'] * int(data['quantity'])
         data['action'] = 'buy'
         serializer = OrderSerializer(data = data)
+        print(serializer,'order ')
         if serializer.is_valid():
             serializer.save()
             wallet = Wallet.objects.get(user_id = request.user)
@@ -28,6 +30,7 @@ class Orders(APIView):
             quantity = int(data['quantity'])
             investment , created  = Investment.objects.get_or_create(   
                 company = data['company'],
+                user_id=request.user.id, 
                 defaults={
                         'price' : data['price'],
                         'quantity' : quantity,

@@ -6,17 +6,18 @@ import Navbar from '../../components/User/Navbar'
 
 function Portfolio() {
   return (
-    <div>
-        <Header/>
-    <div className="flex">
-      <div className="w-1/4 h-screen">
-        <Profilesidebar />
-      </div>
-      <div className="w-3/4 ">
-        <Portfoliosection/>
-      </div>
+    <div className='bg-gray-900'>
+  <Header />
+  <div className="flex h-screen">
+    <div className="w-1/4 h-full bg-gray-100">
+      <Profilesidebar />
     </div>
+    <div className="w-3/4 h-full overflow-y-scroll">
+      <Portfoliosection />
     </div>
+  </div>
+</div>
+
   )
 }
 

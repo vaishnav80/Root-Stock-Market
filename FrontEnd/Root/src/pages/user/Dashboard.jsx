@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 import { order } from "../../actions/order";
 import { Navigate, useNavigate } from "react-router-dom";
 import { getWallet } from "../../actions/wallet";
+import LoadingPage from "../../components/User/LoadingPage";
 
 ChartJS.register(
   CategoryScale,
@@ -40,7 +41,7 @@ const Dashboard = () => {
   const [quantity,setQuantity] = useState(0)
   const [company,setCompany] = useState('')
   const [buyingPrice,setBuyingPrice] = useState(0)
-  const [wallet,setWallet] = useState()
+  const [wallet,setWallet] = useState(null)
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false);
   console.log(tick, "tick");
@@ -54,7 +55,7 @@ const Dashboard = () => {
     
     e.preventDefault()
     setLoading(true);
-    setIsModalOpen(!isModalOpen);
+    
     const response = await order(auth.token,company,buyingPrice,quantity)
     console.log(response);
     if(response.status ==201){
@@ -73,6 +74,7 @@ const Dashboard = () => {
   
   return (
     <context.Provider value={{ setTick, tick,setBuyingPrice,setCompany }}>
+      {!loading?(
       <div className="bg-black">
         <Header className="mt-96" />
         <div className="flex">
@@ -93,7 +95,7 @@ const Dashboard = () => {
             </div>
 
     
-            {isModalOpen && (
+            {isModalOpen && wallet !== null && (
               <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                 <div className="bg-gray-800 p-6 rounded shadow-lg w-1/3 text-white">
                   <div className="flex justify-between items-center mb-4">
@@ -191,14 +193,8 @@ const Dashboard = () => {
               </div>
             )}
             
-            {loading?
-                    <div className="flex items-center justify-center ">
-                      <img
-                        src="src/assets/1.png"
-                        alt="Loading"
-                        className="w-20 h-20 animate-bounce"
-                      />
-                    </div>:''}
+            
+                   
             <div className="flex space-x-4">
               <div className="w-1/2 mt-14">
                 <Watchlist />
@@ -211,10 +207,14 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-        <div className="h-[200px] w-full bg-black">
-          <Footer />
-        </div>
+        
       </div>
+      ):
+      (
+        <div className="bg-black w-screen h-screen">
+        <LoadingPage />
+      </div>
+          )}
     </context.Provider>
   );
 };

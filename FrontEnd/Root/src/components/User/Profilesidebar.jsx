@@ -34,9 +34,11 @@ function Profilesidebar() {
       <button className="w-full py-5 my-5 text-white border border-gray-500 rounded">
         Wallet
       </button></Link>
+      <Link to={'/contactus'}>
       <button className="w-full py-5 my-5 text-white border border-gray-500 rounded">
         Contact us
       </button>
+      </Link>
       <button className="w-full py-5 my-5 text-white border border-gray-500 rounded" onClick={logoutHandler}>
         LogOut
       </button>

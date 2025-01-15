@@ -6,7 +6,8 @@ const INITIAL_STATE = {
     token:'',
     refreshToken:'',
     is_active:false,
-    is_staff : false
+    is_staff : false,
+    id : null
 }
 
 const authSlicer = createSlice({
@@ -20,6 +21,7 @@ const authSlicer = createSlice({
             state.refreshToken=action.payload.tokens.refresh;
             state.is_active = action.payload.user.is_active;
             state.is_staff = action.payload.user.is_staff;
+            state.id = action.payload.user.id
         },
         logout : (state,action)=>{
             state.name=null;
@@ -28,6 +30,7 @@ const authSlicer = createSlice({
             state.refreshToken=null;
             state.is_active=null;
             state.is_staff = null;  
+            state.id = null
         },
         active : (state,action)=>{
             state.is_active = action.payload

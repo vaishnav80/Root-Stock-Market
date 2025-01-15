@@ -2,6 +2,7 @@ import axios from "axios";
 
 import store from '../redux/store';
 import { logout } from "../redux/authSlice";
+import { data } from "react-router-dom";
 
 const baseURL = "http://127.0.0.1:8000/"
 
@@ -61,6 +62,39 @@ export const getWallet = async(token)=>{
 export const getTransaction = async(token)=>{
   try {
       const response = await api.get('wallet/transaction/',{
+          headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+      })
+      return response
+      
+  } catch (error) {
+      console.log(error);
+      
+  }
+ 
+}
+
+export const postWallet = async(token,amount)=>{
+  try {
+      const response = await api.post('wallet/wallet_data/',{amount},{
+          headers: {
+              Authorization: `Bearer ${token}`, 
+            },
+      })
+      return response
+      
+  } catch (error) {
+      console.log(error);
+      
+  }
+ 
+}
+
+
+export const getChatAdmin = async(token)=>{
+  try {
+      const response = await api.get('contactus/chat/',{
           headers: {
               Authorization: `Bearer ${token}`, 
             },

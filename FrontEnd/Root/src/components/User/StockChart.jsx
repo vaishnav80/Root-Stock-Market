@@ -27,8 +27,8 @@ const RealTimeGraph = () => {
   const [prices, setPrices] = useState([]);
   const [timestamps, setTimestamps] = useState([]);
   const [socket, setSocket] = useState(null);
-  const [currentStock, setCurrentStock] = useState({ ticker: 'TATAMOTORS', exchange: 'NSE' });
-  const [inputStock, setInputStock] = useState({ ticker: 'TATAMOTORS', exchange: 'NSE' });
+  const [currentStock, setCurrentStock] = useState({ ticker: 'TCS', exchange: 'NSE' });
+  const [inputStock, setInputStock] = useState({ ticker: 'TCS', exchange: 'NSE' });
   const [status, setStatus] = useState('');
   const { tick, setTick,setBuyingPrice,setCompany } = useContext(context);
   const [load,setLoad] = useState(false)
@@ -176,7 +176,7 @@ const RealTimeGraph = () => {
               value={inputStock.ticker}
               onChange={(e) => setInputStock(prev => ({ ...prev, ticker: e.target.value.toUpperCase() }))}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-              placeholder="TATAMOTORS"
+              placeholder="TCS"
             />
           </div>
           <div>

@@ -26,5 +26,8 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('wallet/',include('wallet.urls')),
     path('stock/',include('stock.urls')),
-    path('order/',include('order.urls'))
+    path('order/',include('order.urls')),
+    path('news/',include('news.urls')),
+    path('contactus/',include('contactus.urls'))
+   
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

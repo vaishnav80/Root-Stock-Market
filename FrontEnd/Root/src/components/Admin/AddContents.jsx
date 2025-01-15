@@ -12,7 +12,7 @@ const AddEditLesson = () => {
   const navigate = useNavigate()
   const [image2, setImage2] = useState(null);
   const [errors,setErrors] = useState({})
-  const [stay,setStay] = useState(false)
+  const [stay,setStay] = useState(0)
   const [data,setData] = useState({
     sub_heading : '',
     content :"",
@@ -42,7 +42,7 @@ const AddEditLesson = () => {
     setIsModalOpen(true);
   };
 
-  const handleformSave =async (e) => {
+  const handleformSave =async (e,msg) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append('sub_heading', data.sub_heading);
@@ -55,12 +55,14 @@ const AddEditLesson = () => {
       console.log(image2,'image');
       
       formData.append('image',image2)
+      
     }
     const response = await addContent(auth.token,formData,id)
     console.log(response,'fgdfg');
     
       if (response.status ==201){
-        if (stay) {
+        if (msg==1) { 
+          toast.success(response.data.message);
           navigate(`/admin/content/${id}/${heading}`)
         }
         else{
@@ -85,7 +87,7 @@ const AddEditLesson = () => {
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
-
+  
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4">
       <div className="w-full max-w-3xl bg-gray-800 p-6 rounded-lg shadow-lg">
@@ -202,8 +204,7 @@ const AddEditLesson = () => {
               <button
                 className="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg"
                 onClick={(e) => {
-                  handleformSave(e);
-                  setStay(true);
+                  handleformSave(e,1);
               }}
               
               >
@@ -212,7 +213,7 @@ const AddEditLesson = () => {
               <button
                 className="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg"
                 onClick=
-                {handleformSave}
+                {(e)=>{handleformSave(e,0)}}
               >
                 Add More Content
               </button>

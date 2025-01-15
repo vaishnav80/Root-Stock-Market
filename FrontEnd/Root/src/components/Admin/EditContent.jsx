@@ -81,9 +81,10 @@ const EditContent = () => {
     formData.append('heading_id',headingId)
     if(image2){
       console.log(image2,'image');
-      
       formData.append('image',image2)
     }
+    console.log(formData);
+    
     const response = await editContent(auth.token,formData,id)
     console.log(response,'fgdfg');
     

@@ -5,17 +5,17 @@ import Header from '../../components/User/Header'
 
 function Order() {
   return (
-    <div>
-        <Header/>
-    <div className="flex">
-      <div className="w-1/4">
-        <Profilesidebar />
-      </div>
-      <div className="w-3/4">
-        <OrderSection/>
-      </div>
+    <div className='bg-gray-900'>
+  <Header />
+  <div className="flex h-screen">
+    <div className="w-1/4 h-full bg-gray-100">
+      <Profilesidebar />
     </div>
+    <div className="w-3/4 h-full overflow-y-scroll">
+      <OrderSection />
     </div>
+  </div>
+</div>
   )
 }
 

@@ -58,15 +58,21 @@ const auth = useSelector((state)=>state.auth)
               </tr>
             </thead>
             <tbody>
-              {transaction.map((t,i)=>(
-                 <tr>
-                 <td className="py-2 px-4 border-b border-gray-700">{t.date}</td>
-                 <td className="py-2 px-4 border-b border-gray-700">{t.description}</td>
-                 <td className="py-2 px-4 border-b border-gray-700 text-right text-red-400">₹ {t.amount}</td>
-               </tr>
-              ))}
-             
               
+              {transaction.map((t, i) => {
+                const isGreen = t.description.toLowerCase().includes("added")
+                const colorClass = isGreen ? "text-green-400" : "text-red-400";
+                return (
+                  <tr key={i}>
+                    <td className="py-2 px-4 border-b border-gray-700">{t.date}</td>
+                    <td className="py-2 px-4 border-b border-gray-700">{t.description}</td>
+                    <td className={`py-2 px-4 border-b border-gray-700 text-right ${colorClass}`}>
+                      ₹ {t.amount}
+                    </td>
+                  </tr>
+                );
+              })}
+          
             </tbody>
           </table>
         </div>

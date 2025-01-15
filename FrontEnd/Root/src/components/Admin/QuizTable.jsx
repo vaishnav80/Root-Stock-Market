@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Edit, Search, ChevronLeft, ChevronRight, Trash2 } from 'lucide-react';
-import { addlesson, deleteLesson, getlesson, updateLesson } from '../../actions/Lesson';
+import { addlesson, addQuiz, deleteLesson, deleteQuiz, getlesson, getQuiz, updateLesson, updateQuiz } from '../../actions/Lesson';
 import { useSelector } from 'react-redux';
 import toast, { Toaster } from 'react-hot-toast';
 import Swal from 'sweetalert2'
@@ -9,28 +9,60 @@ import { useNavigate } from 'react-router-dom';
 const QuizTable = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newLesson, setNewLesson] = useState('');
+  const [newQuestion, setNewQuestion] = useState('');
   const auth = useSelector((select)=>select.auth)
-  const [lesson,setLesson] = useState([])
+  const [question,setQuestion] = useState([])
   const [state,setState] = useState(false)
-  const [edit,setEdit] = useState('')
+  const [edit,setEdit] = useState(0)
+  const [option, setOption] = useState({
+    "option1" : "",
+    "option2" : "",
+    "option3" : "",
+    "option4" : "",
+  });
+
+  const [correctAnswer, setCorrectAnswer] = useState("");
   const [id,setId] = useState(0)
  const navigate = useNavigate()
   useEffect(()=>{
     async function fetchlessons() {
-      const response = await getlesson(auth.token)
-      console.log(response);
-      setLesson(response.data.lesson)
+      const response = await getQuiz(auth.token)
+      setQuestion(response.data.content)
     }
     fetchlessons()
   },[state])
 
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+
+    setOption((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
   const handleAddLesson =async () => {
-    const response = await addlesson(newLesson,auth.token)
-    toast.success('Successfully created!')
+    if (!newQuestion || !option.option1 || !option.option2 || !option.option3 || !option.option4 || !correctAnswer) {
+      toast.error("Please fill all fields and select the correct answer.")
+      return;
+    }
+    const response = await addQuiz(auth.token,newQuestion,option,correctAnswer)
+    if (response.status==201) {
+      toast.success('Successfully created!')
     setIsModalOpen(false);
-    setNewLesson('');
+    setNewQuestion('');
+    setOption({"option1" : "",
+    "option2" : "",
+    "option3" : "",
+    "option4" : "",
+    })
     setState(!state)
+    }
+    else{
+      toast.error(response.error)
+    }
+    
   };
 
   const handleDelete = async (id)=> {
@@ -40,7 +72,7 @@ const QuizTable = () => {
       confirmButtonText: "Delete",
     }).then( async (result) =>  {
       if (result.isConfirmed) {
-        const response = await deleteLesson(auth.token,id)
+        const response = await deleteQuiz(auth.token,id)
         Swal.fire("Deleted!", "", "success");
         setState(!state)
       } else if (result.isDenied) {
@@ -53,8 +85,15 @@ const QuizTable = () => {
   const handleEditLesson = async ()=> {
     console.log(edit,id);
     
-    const response = await updateLesson(auth.token,edit,id)
+    const response = await updateQuiz(auth.token,newQuestion,option,correctAnswer,id)
     toast.success('Successfully updated!')
+    setIsModalOpen(false);
+    setNewQuestion('');
+    setOption({"option1" : "",
+    "option2" : "",
+    "option3" : "",
+    "option4" : "",
+    })
     setEdit('')
     setId(0)
     setState(!state)
@@ -105,7 +144,7 @@ const QuizTable = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-700 bg-gray-800">
-            {lesson.map((ls) => (
+            {question.map((ls) => (
               <tr
                 key={ls.id}
                 className="hover:bg-gray-700 transition-colors"
@@ -114,15 +153,19 @@ const QuizTable = () => {
                   {ls.id}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
-                  {ls.heading}
+                  {ls.question}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-100">
-                  {ls.heading}
+                    {ls.answers
+                      .filter((i) => i.is_correct == true)
+                      .map((item, index) => (
+                        <span key={index}>{item.answer_text}</span> 
+                      ))}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-right">
                   <div className="flex justify-end gap-3">
                     <button
-                      onClick={() => {setEdit(ls.heading),setId(ls.id)}}
+                      onClick={() => {setEdit(ls),setId(ls.id),setIsModalOpen(true),setNewQuestion(ls.question),setOption({'option1':ls.answers[0].answer_text,'option1':ls.answers[0].answer_text,'option2':ls.answers[1].answer_text,'option3':ls.answers[2].answer_text,'option4':ls.answers[3].answer_text},setCorrectAnswer({}))}}
                       className="p-1 hover:bg-gray-600 rounded-md transition-colors"
                     >
                       <Edit size={16} className="text-gray-300 hover:text-gray-100" />
@@ -156,70 +199,82 @@ const QuizTable = () => {
           </div>
         </div>
       </div>
-
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-gray-200 rounded-md p-6 shadow-lg w-96">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Add Quiz</h2>
-            <input
-              type="text"
-              value={newLesson}
-              onChange={(e) => setNewLesson(e.target.value)}
-              placeholder="Enter Question..."
-              className="w-full px-4 py-2 border border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 text-gray-900 focus:ring-blue-500"
-            />
-            <input
-              type="text"
-              value={newLesson}
-              onChange={(e) => setNewLesson(e.target.value)}
-              placeholder="Enter Answer..."
-              className="w-full px-4 py-2 border border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 text-gray-900 focus:ring-blue-500"
-            />
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 bg-gray-500 text-gray-100 rounded-md hover:bg-gray-400"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleAddLesson}
-                className="px-4 py-2 bg-gray-700 text-gray-100 rounded-md hover:bg-gray-500"
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      {edit && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-gray-200 rounded-md p-6 shadow-lg w-96">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Edit Quiz</h2>
-            <input
-              type="text"
-              value={edit}
-              onChange={(e) => setEdit(e.target.value)}
-              placeholder="Enter lesson heading..."
-              className="w-full px-4 py-2 border border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 text-gray-900 focus:ring-blue-500"
-            />
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => {setEdit(''),setEdit(0)}}
-                className="px-4 py-2 bg-gray-500 text-gray-100 rounded-md hover:bg-gray-400"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleEditLesson}
-                className="px-4 py-2 bg-gray-700 text-gray-100 rounded-md hover:bg-gray-900"
-              >
-                Edit
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="bg-gray-200 rounded-md p-6 shadow-lg w-96">
+      <h2 className="text-lg font-semibold text-gray-900 mb-4">Add Quiz</h2>
+      <input
+        type="text"
+        value={newQuestion}
+        onChange={(e) => setNewQuestion(e.target.value)}
+        placeholder="Enter Question..."
+        className="w-full px-4 py-2 border border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 text-gray-900 focus:ring-blue-500"
+      />
+      <input
+        type="text"
+        name='option1'
+        value={option.option1}
+        onChange={handleChange}
+        placeholder="Option 1..."
+        className="w-full px-4 py-2 border border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 text-gray-900 focus:ring-blue-500"
+      />
+      <input
+        type="text"
+        name='option2'
+        value={option.option2}
+        onChange={handleChange}
+        placeholder="Option 2..."
+        className="w-full px-4 py-2 border border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 text-gray-900 focus:ring-blue-500"
+      />
+      <input
+        type="text"
+        name='option3'
+        value={option.option3}
+        onChange={handleChange}
+        placeholder="Option 3..."
+        className="w-full px-4 py-2 border border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 text-gray-900 focus:ring-blue-500"
+      />
+      <input
+        type="text"
+        name='option4'
+        value={option.option4}
+        onChange={handleChange}
+        placeholder="Option 4..."
+        className="w-full px-4 py-2 border border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 text-gray-900 focus:ring-blue-500"
+      />
+
+      <label className="block text-gray-700 mb-2">Select the correct answer:</label>
+      <select
+        value={correctAnswer}
+        onChange={(e) => setCorrectAnswer(e.target.value)}
+        className="w-full px-4 py-2 border border-gray-400 rounded-md mb-4 focus:outline-none focus:ring-2 text-gray-900 focus:ring-blue-500"
+      >
+        <option value="">--Select an option--</option>
+        <option value="option1">{option.option1}</option>
+        <option value="option2">{option.option2}</option>
+        <option value="option3">{option.option3}</option>
+        <option value="option4">{option.option4}</option>
+      </select>
+
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={() => setIsModalOpen(false)}
+          className="px-4 py-2 bg-gray-500 text-gray-100 rounded-md hover:bg-gray-400"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={edit == 0 ? handleAddLesson : handleEditLesson}
+          className="px-4 py-2 bg-gray-700 text-gray-100 rounded-md hover:bg-gray-500"
+        >
+          Add
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+      
       <Toaster
   position="top-center"
   reverseOrder={false}

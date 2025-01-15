@@ -27,6 +27,7 @@ import QuizCompetition from './pages/user/QuizCompetition'
 import Community from './pages/user/Community'
 import Analysis from './pages/user/Analysis'
 import EditLesson from './pages/admin/EditLesson'
+import Contactus from './pages/user/Contactus'
 
 function App() {
   const auth = useSelector((state)=>state.auth)
@@ -82,6 +83,7 @@ function App() {
       <Route path="/quizcompetition" element={<Protected element ={<QuizCompetition/>}/>}/>
       <Route path="/community" element={<Protected element ={<Community/>}/>}/>
       <Route path="/analysis" element={<Protected element ={<Analysis/>}/>}/>
+      <Route path="/contactus" element={<Protected element ={<Contactus/>}/>}/>
 
       {/* admin side */}
       <Route path="/admin" element={<Adminlogin/>}/>

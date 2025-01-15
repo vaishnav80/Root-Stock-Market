@@ -1,74 +1,88 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../components/User/Header";
-import Navbar from "../../components/User/Navbar";
-
-const newsData = [
-  {
-    id: 1,
-    title: "Closing Bell: Sensex up 843 points, Nifty above 24,750 as market makes a sharp recovery",
-    image: "https://via.placeholder.com/300x200", // Replace with actual image URL
-    category: "news",
-  },
-  {
-    id: 2,
-    title: "Sensex touches a record high of 63,000 points as markets rally",
-    image: "https://via.placeholder.com/300x200", // Replace with actual image URL
-    category: "latest",
-  },
-  {
-    id: 4,
-    title: "Sensex touches a record high of 63,000 points as markets rally",
-    image: "https://via.placeholder.com/300x200", // Replace with actual image URL
-    category: "latest",
-  },
-  {
-    id: 3,
-    title: "Nifty hits an all-time high; financials lead the surge",
-    image: "https://via.placeholder.com/300x200", // Replace with actual image URL
-    category: "popular",
-  },
-  // Add more news items here
-];
+import { getNews } from "../../actions/Lesson";
+import { useSelector } from "react-redux";
 
 const StockMarketNews = () => {
-  const [activeTab, setActiveTab] = useState("news");
+  const [newsData, setNewsData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [newsPerPage] = useState(12); 
+  const auth = useSelector((state) => state.auth);
 
-  const filteredNews = newsData.filter((news) => news.category === activeTab);
+  useEffect(() => {
+    async function fetchData() {
+      const response = await getNews(auth.token);
+      setNewsData(response.data.data);
+    }
+    fetchData();
+  }, [auth.token]);
+
+  const indexOfLastNews = currentPage * newsPerPage;
+  const indexOfFirstNews = indexOfLastNews - newsPerPage;
+  const currentNews = newsData.slice(indexOfFirstNews, indexOfLastNews);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="min-h-screen bg-black text-white">
-        <Header/>
-      {/* Tabs */}
-      <div className="flex justify-center space-x-4 py-4">
-        {["news", "latest", "popular"].map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-6 py-2 border rounded-full ${
-              activeTab === tab
-                ? "bg-white text-black"
-                : "border-white text-white hover:bg-gray-800"
-            }`}
-          >
-            {tab.toUpperCase()}
-          </button>
-        ))}
-      </div>
+      <Header />
 
-      {/* News Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
-        {filteredNews.map((news) => (
-          <div
-            key={news.id}
-            className="bg-gray-800 rounded-lg overflow-hidden shadow-md hover:scale-105 transition transform duration-300"
-          >
-            <img src={news.image} alt={news.title} className="w-full h-40 object-cover" />
-            <div className="p-4">
-              <h3 className="text-lg font-bold">{news.title}</h3>
+      {currentNews && currentNews.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6">
+          {currentNews.map((news, index) => (
+            <div
+              key={index}
+              className="bg-gray-800 rounded-lg overflow-hidden shadow-md hover:scale-105 transition-transform duration-300"
+            >
+              <img
+                src={news.image_url}
+                alt={news.headline}
+                className="w-full h-40 object-cover"
+              />
+              <div className="p-4">
+                <a href={news.link}>
+                  <h3 className="text-lg font-bold text-white">{news.headline}</h3>
+                </a>
+                <p>{news.uploaded_time}</p>
+              </div>
             </div>
+          ))}
+        </div>
+      ) : (
+        <div className="min-h-screen">
+          <div className="flex items-center mt-28 justify-center">
+            <img
+              src="src/assets/1.png"
+              alt="Loading"
+              className="w-20 h-20 animate-bounce"
+            />
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {newsData.length > newsPerPage && (
+        <div className="flex justify-center mt-6">
+          <ul className="flex space-x-2">
+            {Array.from(
+              { length: Math.ceil(newsData.length / newsPerPage) },
+              (_, i) => i + 1
+            ).map((number) => (
+              <li key={number}>
+                <button
+                  onClick={() => paginate(number)}
+                  className={`px-3 py-1 rounded ${
+                    currentPage === number
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-700 text-white"
+                  }`}
+                >
+                  {number}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
