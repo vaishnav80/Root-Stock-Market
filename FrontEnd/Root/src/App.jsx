@@ -28,6 +28,8 @@ import Community from './pages/user/Community'
 import Analysis from './pages/user/Analysis'
 import EditLesson from './pages/admin/EditLesson'
 import Contactus from './pages/user/Contactus'
+import WatchList from './components/User/Watchlist'
+import WatchListPage from './pages/user/WatchList'
 
 function App() {
   const auth = useSelector((state)=>state.auth)
@@ -84,6 +86,7 @@ function App() {
       <Route path="/community" element={<Protected element ={<Community/>}/>}/>
       <Route path="/analysis" element={<Protected element ={<Analysis/>}/>}/>
       <Route path="/contactus" element={<Protected element ={<Contactus/>}/>}/>
+      <Route path="/watchlist" element={<Protected element ={<WatchListPage/>}/>}/>
 
       {/* admin side */}
       <Route path="/admin" element={<Adminlogin/>}/>

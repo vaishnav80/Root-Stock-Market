@@ -10,9 +10,9 @@ django.setup()
 
 from stock.routing import websocket_urlpatterns as stock_websocket_patterns
 from contactus.routing import websocket_urlpatterns as contactus_websocket_patterns
+from community.routing import websocket_urlpatterns as community_websocket_patterns
 
-
-combined_websocket_urlpatterns = stock_websocket_patterns + contactus_websocket_patterns
+combined_websocket_urlpatterns = stock_websocket_patterns + contactus_websocket_patterns + community_websocket_patterns
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),

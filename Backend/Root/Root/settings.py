@@ -36,7 +36,9 @@ INSTALLED_APPS = [
     'stock',
     'order',
     'news',
-    'contactus'
+    'contactus',
+    'community',
+    'analysis'
 ]
 
 AUTH_USER_MODEL = 'account.CustomUser'

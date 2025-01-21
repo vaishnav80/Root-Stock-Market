@@ -1,11 +1,13 @@
 import React from 'react'
 import Header from '../../components/User/Header'
+import StockAnalysis from '../../components/User/AnalysisComponent'
 
 function Analysis() {
   return (
-    <div>
+    <div className='bg-black h-screen'>
     <Header/>
-    Analysis</div>
+    <StockAnalysis/>
+    </div>
   )
 }
 

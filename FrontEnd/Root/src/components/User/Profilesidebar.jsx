@@ -27,9 +27,11 @@ function Profilesidebar() {
       <button className="w-full py-5 my-5 text-white border border-gray-500 rounded">
         Orders
       </button></Link>
+      <Link to={'/watchlist'}>
       <button className="w-full py-5 my-5 text-white border border-gray-500 rounded">
         Watchlist
       </button>
+      </Link>
       <Link to={'/wallet'}>
       <button className="w-full py-5 my-5 text-white border border-gray-500 rounded">
         Wallet

@@ -15,7 +15,7 @@ const ChatWithAdmin = () => {
     ws.current = new WebSocket(`ws://localhost:8000/ws/chat/?user_id=${auth.id}`);
     ws.current.onmessage = (event) => {
       const newMessage = JSON.parse(event.data);
-      console.log(newMessage);
+      console.log(newMessage,'newsssss');
       setMessages((prev) => {
         if (!prev.some((msg) => msg.timestamp === newMessage.timestamp && msg.content === newMessage.content)) {
           return [...prev, newMessage];

@@ -78,6 +78,7 @@ const ProfileSection = () => {
     }
     
   },[userData,navigate,image,state]);
+  
   const handleSave =async () => {
     setIsEditing(false);
     try {

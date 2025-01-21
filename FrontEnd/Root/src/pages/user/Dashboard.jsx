@@ -21,6 +21,7 @@ import { order } from "../../actions/order";
 import { Navigate, useNavigate } from "react-router-dom";
 import { getWallet } from "../../actions/wallet";
 import LoadingPage from "../../components/User/LoadingPage";
+import WatchList from "../../components/User/WatchlistTable";
 
 ChartJS.register(
   CategoryScale,
@@ -196,9 +197,12 @@ const Dashboard = () => {
             
                    
             <div className="flex space-x-4">
-              <div className="w-1/2 mt-14">
-                <Watchlist />
-              </div>
+            <div className="w-1/2 mt-14">
+              <h1 className="text-white text-2xl font-semibold text-center mb-4">
+                Watchlist
+              </h1>
+              <WatchList />
+            </div>
               <div className="w-1/2">
                 <div className="p-4 rounded-lg shadow-lg h-[400px]">
                   <CompanyGraph />

@@ -82,7 +82,7 @@ const StockApp = () => {
   const calculateChange = (ticker) => {
     const prevPrice = prevStockData[ticker];
     const currentPrice = stockData[ticker];
-    console.log(prevPrice,currentPrice);
+    console.log(prevPrice,currentPrice,'GDFGF');
     
     if (prevPrice && currentPrice) {
       return (((currentPrice - prevPrice) / prevPrice) * 100).toFixed(2);

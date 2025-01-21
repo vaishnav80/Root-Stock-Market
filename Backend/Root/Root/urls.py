@@ -28,6 +28,8 @@ urlpatterns = [
     path('stock/',include('stock.urls')),
     path('order/',include('order.urls')),
     path('news/',include('news.urls')),
-    path('contactus/',include('contactus.urls'))
+    path('contactus/',include('contactus.urls')),
+    path('community/',include('community.urls')),
+    path('analysis/',include('analysis.urls'))
    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

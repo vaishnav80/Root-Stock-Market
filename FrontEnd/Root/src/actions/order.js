@@ -45,7 +45,7 @@ const api = axios.create({
 export const order = async (token,company,price,quantity)=>{
    try {
             const response = api.post('order/order_data/',{
-                company,price,quantity
+                company,price,quantity,action
             },{
             headers :{
                 Authorization:`Bearer ${token}`
@@ -58,6 +58,24 @@ export const order = async (token,company,price,quantity)=>{
    }
    
 }
+export const sellOrder = async (token,company,price,quantity)=>{
+    try {
+        console.log('selll');
+        
+             const response = api.put('order/order_data/',{
+                 company,price,quantity
+             },{
+             headers :{
+                 Authorization:`Bearer ${token}`
+             } 
+         })
+         return response
+ 
+    } catch (error) {
+     
+    }   
+ }
+ 
 
 
 export const getorder = async (token)=>{
