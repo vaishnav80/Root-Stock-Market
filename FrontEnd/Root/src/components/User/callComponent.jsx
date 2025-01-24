@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { X, Mic, MicOff, Video as VideoIcon, VideoOff } from 'lucide-react';
+import { useSelector } from 'react-redux';
 
 const CallInterface = ({ callType, remoteUser, onEndCall, ws }) => {
   const [localStream, setLocalStream] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(callType === 'audio');
-  
+  const auth = useSelector((select) => select.auth);
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
   const peerConnection = useRef(null);
@@ -14,64 +15,82 @@ const CallInterface = ({ callType, remoteUser, onEndCall, ws }) => {
   useEffect(() => {
     const initializeCall = async () => {
       try {
-        // Get user media based on call type
         const mediaConstraints = {
           audio: true,
           video: callType === 'video'
         };
+        console.log('1');
         
         const stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
         setLocalStream(stream);
+        console.log('2');
         
         if (localVideoRef.current) {
           localVideoRef.current.srcObject = stream;
         }
-
-        // Initialize WebRTC peer connection
+        console.log('3');
+        
         const configuration = {
           iceServers: [
-            { urls: 'stun:stun.l.google.com:19302' },
-            // Add your TURN server configuration here if needed
+            { urls: 'stun:stun.l.google.com:19302' }
           ]
         };
+        console.log('4');
 
         const pc = new RTCPeerConnection(configuration);
         peerConnection.current = pc;
 
-        // Add local stream to peer connection
         stream.getTracks().forEach(track => {
           pc.addTrack(track, stream);
         });
 
-        // Handle incoming tracks
         pc.ontrack = (event) => {
           if (remoteVideoRef.current) {
             remoteVideoRef.current.srcObject = event.streams[0];
           }
         };
+        console.log(remoteUser,'remoteuser checking ..');
+        
+        // If this is an incoming call (we have an offer)
+        if (remoteUser.offer) {
+        
+          await pc.setRemoteDescription(new RTCSessionDescription(remoteUser.offer));
+          
+          const answer = await pc.createAnswer();
+          await pc.setLocalDescription(answer);
+          
+          ws.current.send(JSON.stringify({
+            type: 'call_answer',
+            caller_id: remoteUser.caller_id,
+            call_id: remoteUser.call_id,
+            answer: answer
+          }));
+        } else {
+          // This is an outgoing call
+          const receiver = remoteUser.members.find(member => member.user_id !== auth.id);
+          
+          const offer = await pc.createOffer();
+          await pc.setLocalDescription(offer);
 
-        // Handle ICE candidates
+          ws.current.send(JSON.stringify({
+            type: 'call_offer',
+            receiver_id: receiver.user_id,
+            chat_id: remoteUser.id,
+            call_type: callType,
+            offer: offer
+          }));
+        }
+
         pc.onicecandidate = (event) => {
           if (event.candidate) {
+            const peerId = remoteUser.caller_id || remoteUser.members.find(member => member.user_id !== auth.id).user_id;
             ws.current.send(JSON.stringify({
               type: 'ice_candidate',
-              peer_id: remoteUser.id,
+              peer_id: peerId,
               candidate: event.candidate
             }));
           }
         };
-
-        // Create and send offer
-        const offer = await pc.createOffer();
-        await pc.setLocalDescription(offer);
-
-        ws.current.send(JSON.stringify({
-          type: 'call_offer',
-          receiver_id: remoteUser.id,
-          chat_id: remoteUser.chat_id,
-          call_type: callType,
-          offer: offer
-        }));
 
       } catch (error) {
         console.error('Error initializing call:', error);
@@ -80,9 +99,9 @@ const CallInterface = ({ callType, remoteUser, onEndCall, ws }) => {
     };
 
     initializeCall();
-
+    
+    // Clean up function
     return () => {
-      // Cleanup
       if (localStream) {
         localStream.getTracks().forEach(track => track.stop());
       }
@@ -92,50 +111,49 @@ const CallInterface = ({ callType, remoteUser, onEndCall, ws }) => {
     };
   }, []);
 
+  // Add WebSocket message handler
   useEffect(() => {
-    const handleWebRTCMessage = async (message) => {
-      switch (message.type) {
-        case 'call_answered':
-          try {
+    const handleWebRTCMessage = async (event) => {
+      const data = JSON.parse(event.data);
+      console.log('Call WebSocket message:', data);
+
+      try {
+        switch (data.type) {
+          case 'call_answered':
             await peerConnection.current.setRemoteDescription(
-              new RTCSessionDescription(message.answer)
+              new RTCSessionDescription(data.answer)
             );
             setIsConnected(true);
-          } catch (error) {
-            console.error('Error handling call answer:', error);
-          }
-          break;
+            break;
 
-        case 'ice_candidate':
-          try {
-            if (message.candidate) {
+          case 'ice_candidate':
+            console.log('haiaa');
+            console.log(peerConnection,data,'kkkkk');
+            
+            if (peerConnection.current && data.candidate) {
+              console.log('llll');
+              
               await peerConnection.current.addIceCandidate(
-                new RTCIceCandidate(message.candidate)
+                new RTCIceCandidate(data.candidate)
               );
             }
-          } catch (error) {
-            console.error('Error handling ICE candidate:', error);
-          }
-          break;
+            break;
 
-        case 'call_ended':
-          onEndCall();
-          break;
+          case 'call_ended':
+            onEndCall();
+            break;
+        }
+      } catch (error) {
+        console.error('Error handling WebRTC message:', error);
       }
     };
 
-    // Add message handler to websocket
-    const currentWs = ws.current;
-    currentWs.addEventListener('message', (event) => {
-      const data = JSON.parse(event.data);
-      handleWebRTCMessage(data);
-    });
+    ws.current.addEventListener('message', handleWebRTCMessage);
 
     return () => {
-      currentWs.removeEventListener('message', handleWebRTCMessage);
+      ws.current.removeEventListener('message', handleWebRTCMessage);
     };
-  }, []);
-
+  }, [ws.current]);
   const toggleMute = () => {
     if (localStream) {
       localStream.getAudioTracks().forEach(track => {
@@ -155,9 +173,10 @@ const CallInterface = ({ callType, remoteUser, onEndCall, ws }) => {
   };
 
   const handleEndCall = () => {
+    const receiver = remoteUser.members.find(member => member.user_id !== auth.id);
     ws.current.send(JSON.stringify({
       type: 'end_call',
-      peer_id: remoteUser.id,
+      peer_id: receiver.user_id,
       call_id: remoteUser.call_id
     }));
     onEndCall();
@@ -168,7 +187,7 @@ const CallInterface = ({ callType, remoteUser, onEndCall, ws }) => {
       <div className="bg-gray-800 rounded-lg p-4 w-full max-w-4xl">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-white">
-            {callType === 'video' ? 'Video' : 'Audio'} Call with {remoteUser.id}
+            {callType === 'video' ? 'Video' : 'Audio'} Call
           </h2>
           <button
             onClick={handleEndCall}
@@ -179,18 +198,18 @@ const CallInterface = ({ callType, remoteUser, onEndCall, ws }) => {
         </div>
 
         <div className="relative">
-          {callType === 'video' && (
+          {callType === 'video' ? (
             <div className="grid grid-cols-2 gap-4">
               <div className="relative">
                 <video
                   ref={remoteVideoRef}
                   autoPlay
                   playsInline
-                  className="w-full rounded-lg bg-gray-700"
+                  className="w-full h-64 rounded-lg bg-gray-700 object-cover"
                 />
                 <div className="absolute bottom-4 left-4">
                   <p className="text-white bg-gray-900 bg-opacity-75 px-2 py-1 rounded">
-                    {remoteUser.name}
+                   Remote User
                   </p>
                 </div>
               </div>
@@ -200,7 +219,7 @@ const CallInterface = ({ callType, remoteUser, onEndCall, ws }) => {
                   autoPlay
                   playsInline
                   muted
-                  className="w-full rounded-lg bg-gray-700"
+                  className="w-full h-64 rounded-lg bg-gray-700 object-cover"
                 />
                 <div className="absolute bottom-4 left-4">
                   <p className="text-white bg-gray-900 bg-opacity-75 px-2 py-1 rounded">
@@ -209,15 +228,13 @@ const CallInterface = ({ callType, remoteUser, onEndCall, ws }) => {
                 </div>
               </div>
             </div>
-          )}
-
-          {callType === 'audio' && (
+          ) : (
             <div className="flex items-center justify-center h-64 bg-gray-700 rounded-lg">
-              <div className="text-center">
+              <div className="text-center text-white">
                 <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  {remoteUser.id}
+                  {remoteUser.name?.[0] || '?'}
                 </div>
-                <h3 className="text-xl font-semibold">{remoteUser.id}</h3>
+                <h3 className="text-xl font-semibold">{remoteUser.name || 'Remote User'}</h3>
                 <p className="text-gray-400">
                   {isConnected ? 'Connected' : 'Connecting...'}
                 </p>
@@ -229,28 +246,24 @@ const CallInterface = ({ callType, remoteUser, onEndCall, ws }) => {
         <div className="flex justify-center space-x-4 mt-4">
           <button
             onClick={toggleMute}
-            className={`p-4 rounded-full ${
-              isMuted ? 'bg-red-500' : 'bg-gray-700'
-            }`}
+            className={`p-4 rounded-full ${isMuted ? 'bg-red-500' : 'bg-gray-700'} hover:opacity-90 transition-opacity`}
           >
             {isMuted ? (
-              <MicOff className="w-6 h-6" />
+              <MicOff className="w-6 h-6 text-white" />
             ) : (
-              <Mic className="w-6 h-6" />
+              <Mic className="w-6 h-6 text-white" />
             )}
           </button>
           
           {callType === 'video' && (
             <button
               onClick={toggleVideo}
-              className={`p-4 rounded-full ${
-                isVideoOff ? 'bg-red-500' : 'bg-gray-700'
-              }`}
+              className={`p-4 rounded-full ${isVideoOff ? 'bg-red-500' : 'bg-gray-700'} hover:opacity-90 transition-opacity`}
             >
               {isVideoOff ? (
-                <VideoOff className="w-6 h-6" />
+                <VideoOff className="w-6 h-6 text-white" />
               ) : (
-                <VideoIcon className="w-6 h-6" />
+                <VideoIcon className="w-6 h-6 text-white" />
               )}
             </button>
           )}

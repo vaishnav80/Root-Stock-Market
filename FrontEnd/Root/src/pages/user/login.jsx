@@ -16,16 +16,32 @@ const Login = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
+  
   const loginSubmit = async (e) => {
     e.preventDefault();
+    if (!email || !password) {
+      setError("Email and Password is required")
+      return
+    }
+    if (!validateEmail(email)) {
+      setError("Invalid email address");
+      return
+    }
     const response = await loginUser(email, password);
     if (response.status == 200) {
       dispatch(login(response.data));
       navigate("/", { replace: true });
     } else {
+      console.log(response.data);
+      
       const errorData = response.data;
-      setError(errorData.message);
+      setError(errorData.message.non_field_errors[0]);
     }
+  };
+  
+  const validateEmail = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
   const handleSuccess = async (response) => {
     const idToken = response.credential;
@@ -79,7 +95,7 @@ const Login = () => {
                 Email or Username
               </label>
               <input
-                type="email"
+                type="text"
                 className="w-full px-4 py-2 border-none rounded-lg bg-[#2D2D3D] text-white focus:outline-none focus:ring-2 focus:ring-purple-600"
                 placeholder="Enter your email"
                 onChange={(e) => setEmail(e.target.value)}

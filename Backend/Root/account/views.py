@@ -60,64 +60,25 @@ class RegisterView(APIView):
             "message": "Invalid data provided",
             "errors": serializer.errors
         }, status=status.HTTP_400_BAD_REQUEST)
+    
+
 class LoginView(APIView):
     permission_classes = [AllowAny]
-
     def post(self, request):
-
         serializer = LoginSerializer(data=request.data)
-      
+     
         try:
-            if not serializer.is_valid():
             
-                error_msg = serializer.errors
-           
-                if 'email' in error_msg:
-                    return Response({
-                        "status": "error",
-                        "message": "Please enter a valid email address",
-                        "field": "email"
-                    }, status=status.HTTP_400_BAD_REQUEST)
-                    
-                if 'password' in serializer.errors:
-                    return Response({
-                        "status": "error",
-                        "message": "Password is required",
-                        "field": "password"
-                    }, status=status.HTTP_400_BAD_REQUEST)
-                
-                if 'length' in serializer.errors:
-                    return Response({
-                        "status": "error",
-                        "message": "Password must be contain 8 letters",
-                        "field": "password"
-                    }, status=status.HTTP_400_BAD_REQUEST)
-                    
-                    
-                if "invalid" in error_msg:
-                    return Response({
-                        "status": "error",
-                        "message": "Email or password is incorrect",
-                        "field": "credentials"
-                    }, status=status.HTTP_401_UNAUTHORIZED)
-                    
-                if "disabled" in error_msg:
-                    return Response({
-                        "status": "error",
-                        "message": "Your account has been disabled. Please contact support.",
-                        "field": "account"
-                    }, status=status.HTTP_403_FORBIDDEN)
-                
+            if not serializer.is_valid():
                 return Response({
                     "status": "error",
-                    "message": "Invalid input data",
-                    "errors": serializer.errors
-                }, status=status.HTTP_400_BAD_REQUEST)
+                    "message": serializer.errors,
+                }, status=401)
         
 
             user = serializer.validated_data['user']
             refresh = RefreshToken.for_user(user)
-            
+           
             return Response({
                 "status": "success",
                 "message": "Login successful",
@@ -127,14 +88,14 @@ class LoginView(APIView):
                     "access": str(refresh.access_token),
                 }
             }, status=status.HTTP_200_OK)
-            
+           
         except Exception as e:
+        
             return Response({
                 "status": "error",
-                "message": "An unexpected error occurred. Please try again.",
-                "detail": str(e) 
+                "message": "Authentication failed"
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]

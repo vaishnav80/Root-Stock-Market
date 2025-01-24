@@ -49,6 +49,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         validated_data.pop('confirm_password', None)
         return CustomUser.objects.create_user(**validated_data)
 
+
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
     password = serializers.CharField(
@@ -58,36 +59,29 @@ class LoginSerializer(serializers.Serializer):
     )
 
     def validate(self, data):
-        email = data.get("email").lower()
-        password = data.get("password")
+        email = data.get("email", "").lower()
+        password = data.get("password", "")
+       
+       
+        if len(password) < 8:
+            raise serializers.ValidationError("Password must be at least 8 characters")
         
-        if not email or not password:
-            raise serializers.ValidationError("Please provide both email and password")
-        
+ 
         try:    
-            users = CustomUser.objects.get(email=email)
-        except:
-            raise  serializers.ValidationError({
-                "email": ["email"]
-            })
-        if len(password) <8 : 
-            raise  serializers.ValidationError({
-                "length": ["length"]
-            })
-
-        if not users.is_active:
-            raise serializers.ValidationError({
-                "disabled": ["disabled"]
-            })
-        
-        user = authenticate(email=email, password=password)
-
-        
-        if not user:
-            raise serializers.ValidationError({
-                "invalid": ["Invalid"]
-            })
+            user = CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError( "User not found")
+  
+        try:
+            user = authenticate(email=email, password=password)
+        except:   
+            raise serializers.ValidationError("Invalid credentials")
             
+
+        if not user.is_active:
+            raise serializers.ValidationError( "Account is disabled")
+        
+     
         data['user'] = user
         return data
     

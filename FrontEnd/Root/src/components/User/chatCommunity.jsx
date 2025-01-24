@@ -58,7 +58,20 @@ const ChatInterface = () => {
             [`${data.status_type}_by`]: [...(prev[data.message_id]?.[`${data.status_type}_by`] || []), data.user_id]
           }
         }));
+      }if (data.type === 'incoming_call') {
+        console.log('incoming......');
+        
+        setActiveCall({
+          type: data.call_type,
+          remoteUser: {
+            ...selected,
+            call_id: data.call_id,
+            caller_id: data.caller_id,
+            offer: data.offer
+          }
+        });
       }
+      
       else if (data.type === 'chat_list') {
         setChats(data.chats);
       } else if (data.type === 'chat_history') {
