@@ -165,7 +165,7 @@ const QuizTable = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300 text-right">
                   <div className="flex justify-end gap-3">
                     <button
-                      onClick={() => {setEdit(ls),setId(ls.id),setIsModalOpen(true),setNewQuestion(ls.question),setOption({'option1':ls.answers[0].answer_text,'option1':ls.answers[0].answer_text,'option2':ls.answers[1].answer_text,'option3':ls.answers[2].answer_text,'option4':ls.answers[3].answer_text},setCorrectAnswer({}))}}
+                      onClick={() => {setEdit(ls),setId(ls.id),setIsModalOpen(true),setNewQuestion(ls.question),setOption({'option1':ls.answers[0].answer_text,'option2':ls.answers[1].answer_text,'option3':ls.answers[2].answer_text,'option4':ls.answers[3].answer_text},setCorrectAnswer({}))}}
                       className="p-1 hover:bg-gray-600 rounded-md transition-colors"
                     >
                       <Edit size={16} className="text-gray-300 hover:text-gray-100" />

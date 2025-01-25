@@ -1,8 +1,8 @@
 import React from 'react'
 import Header from '../../components/User/Header'
 import Profilesidebar from '../../components/User/Profilesidebar'
-import Portfoliosection from '../../components/User/portfoliosection'
-import Navbar from '../../components/User/Navbar'
+import PortfolioSection from '../../components/User/Portfoliosection.jsx'
+
 
 function Portfolio() {
   return (
@@ -13,7 +13,7 @@ function Portfolio() {
       <Profilesidebar />
     </div>
     <div className="w-3/4 h-full overflow-y-scroll">
-      <Portfoliosection />
+      <PortfolioSection />
     </div>
   </div>
 </div>
