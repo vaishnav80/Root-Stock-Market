@@ -26,7 +26,7 @@ const ChatInterface = () => {
   };
 
   useEffect(() => {
-    ws.current = new WebSocket(`ws://localhost:8000/ws/community/?user_id=${auth.id}`);
+    ws.current = new WebSocket(`ws://api.rootstocks.site/ws/community/?user_id=${auth.id}`);
 
     ws.current.onopen = () => {
       console.log('WebSocket connected');

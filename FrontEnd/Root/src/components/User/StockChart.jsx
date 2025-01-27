@@ -33,7 +33,7 @@ const RealTimeGraph = () => {
   const { tick, setTick,setBuyingPrice,setCompany } = useContext(context);
   const [load,setLoad] = useState(false)
   useEffect(() => {
-    const ws = new WebSocket('ws://127.0.0.1:8000/ws/stock/');
+    const ws = new WebSocket('ws://api.rootstocks.site/ws/stock/');
     
     ws.onopen = () => {
       setStatus('Connected');

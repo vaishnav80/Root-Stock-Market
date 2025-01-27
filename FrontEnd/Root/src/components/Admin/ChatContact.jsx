@@ -18,7 +18,7 @@ const ChatWithUser = ({user}) => {
     console.log(a,'rec');
     setReceiver(a)
     setMessages([''])
-    ws.current = new WebSocket(`ws://localhost:8000/ws/chat/?user_id=${a}`);
+    ws.current = new WebSocket(`ws://api.rootstocks.site/ws/chat/?user_id=${a}`);
     ws.current.onmessage = (event) => {
       const newMessage = JSON.parse(event.data);
       console.log(newMessage,'new');
