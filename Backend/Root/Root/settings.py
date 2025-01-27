@@ -12,7 +12,8 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*'] 
+ALLOWED_HOSTS = ['http://16.171.13.47/8000', 'rootstocks.site',"*"]
+
 
 
 INSTALLED_APPS = [

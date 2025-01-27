@@ -1,0 +1,10 @@
+# Exclude node_modules, log files, etc.
+node_modules
+*.log
+*.md
+*.git
+*.gitignore
+*.DS_Store
+
+*.pyc
+*.pyo

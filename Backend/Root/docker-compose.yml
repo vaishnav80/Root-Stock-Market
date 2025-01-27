@@ -1,0 +1,28 @@
+version: '3.9'
+
+services:
+  web:
+    image: vaishnavpuzhakkal/my-repo:root-web
+    container_name: root-web-1
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=django-insecure-!-5z%@-u0l#lpoui4nn93+6i&p7!*@!d&m1+p412ey2t*btvz5
+    depends_on:
+      - db
+    command: daphne -b 0.0.0.0 -p 8000 Root.asgi:application
+
+  db:
+    image: vaishnavpuzhakkal/my-repo:postgres
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: vaishnav
+      POSTGRES_PASSWORD: vaishnav
+      POSTGRES_DB: root
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

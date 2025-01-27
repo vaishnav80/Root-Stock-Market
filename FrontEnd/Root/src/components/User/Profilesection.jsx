@@ -29,7 +29,7 @@ const ProfileSection = () => {
       formData.append("image", file);
         
       try {
-        const response = await axios.patch("http://127.0.0.1:8000/account/profile/", formData, {
+        const response = await axios.patch("https://api.rootstocks.site/account/profile/", formData, {
           headers: {
             Authorization: `Bearer ${userData.token}`,
             "Content-Type": "multipart/form-data",

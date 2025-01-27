@@ -4,7 +4,7 @@ import store from '../redux/store';
 import { logout } from "../redux/authSlice";
 import { data } from "react-router-dom";
 
-const baseURL = "http://127.0.0.1:8000/"
+const baseURL = "https://api.rootstocks.site/"
 
 const api = axios.create({
     baseURL,
