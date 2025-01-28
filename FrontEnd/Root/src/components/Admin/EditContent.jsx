@@ -37,7 +37,7 @@ const EditContent = () => {
                 }));
             
                 if (index.image) {
-                  setImage(`http://127.0.0.1:8000${index.image}`)
+                  setImage(`https://rootstocks.site${index.image}`)
                 }
             }
           })

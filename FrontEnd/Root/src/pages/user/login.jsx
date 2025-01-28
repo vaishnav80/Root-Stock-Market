@@ -47,7 +47,7 @@ const Login = () => {
     const idToken = response.credential;
     
     try {
-      const res = await axios.post("http://127.0.0.1:8000/account/google-login/", { token: idToken }
+      const res = await axios.post("https://rootstocks.site/account/google-login/", { token: idToken }
       );
 
       if (res.status === 200) {
