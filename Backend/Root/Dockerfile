@@ -8,8 +8,7 @@ COPY . /app
 COPY ./Backend/Root/requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy .env file
-COPY ./Backend/Root/.env .
+
 
 # Expose the port
 EXPOSE 8000
