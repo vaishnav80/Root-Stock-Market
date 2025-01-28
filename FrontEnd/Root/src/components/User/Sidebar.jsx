@@ -105,7 +105,7 @@ const StockApp = () => {
         <div className="flex items-center justify-center ">
      
      <img
-       src="src/assets/1.png"
+       src="/assets/1.png"
        alt="Loading"
        className="w-20 h-20 animate-bounce"
      />

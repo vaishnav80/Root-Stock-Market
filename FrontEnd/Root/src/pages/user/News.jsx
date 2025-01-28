@@ -52,7 +52,7 @@ const StockMarketNews = () => {
         <div className="min-h-screen">
           <div className="flex items-center mt-28 justify-center">
             <img
-              src="src/assets/1.png"
+              src="/assets/1.png"
               alt="Loading"
               className="w-20 h-20 animate-bounce"
             />

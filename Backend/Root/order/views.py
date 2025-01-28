@@ -16,7 +16,7 @@ class Orders(APIView):
     def post(self,request):
         data = request.data.copy()
 
-        print(data)
+        print('data',data)
         data['user_id'] = request.user.id
         data['totalAmount'] = data['price'] * int(data['quantity'])
         serializer = OrderSerializer(data = data)
