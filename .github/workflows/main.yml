@@ -30,6 +30,11 @@ jobs:
           docker build --no-cache -t vaishnavpuzhakkal/my-repo:root-web -f ./Backend/Root/Dockerfile .
           docker push vaishnavpuzhakkal/my-repo:root-web
           docker push vaishnavpuzhakkal/my-repo:root-web
+
+      # Build postgres image if needed
+      - name: Build and push db image
+        run: |
+          docker build -t vaishnavpuzhakkal/my-repo:postgres -f ./Backend/Root/Dockerfile .
           docker push vaishnavpuzhakkal/my-repo:postgres
 
   deploy:
