@@ -14,7 +14,7 @@ class Orders(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self,request):
-        print('prices')
+        print('pricesss')
         data = request.data.copy()
 
         print('data',data)
