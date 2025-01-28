@@ -82,7 +82,7 @@ const ProfileSection = () => {
   const handleSave =async () => {
     setIsEditing(false);
     try {
-      const response = await axios.patch("http://127.0.0.1:8000/account/profile/", tempData, {
+      const response = await axios.patch("https://api.rootstocks.site/account/profile/", tempData, {
         headers: {
           Authorization: `Bearer ${userData.token}`,
           "Content-Type": "multipart/form-data",
@@ -100,7 +100,7 @@ const ProfileSection = () => {
     setTempData(profileData)
     setIsEditing(false);
   }; 
-  const imgs = `http://127.0.0.1:8000${profileData.image}`
+  const imgs = `https://api.rootstocks.site${profileData.image}`
   return (
     <div className=" p-6 bg-gray-900 h-full shadow-xl text-gray-100">
       <div className="relative mb-6">

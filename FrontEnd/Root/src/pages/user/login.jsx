@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-
+ 
 const Login = () => {
   const auth = useSelector((state) => state.auth);
 
@@ -71,12 +71,12 @@ const Login = () => {
     <div className="min-h-screen flex">
       <div
         className="w-1/2 bg-[#1E1E2F] flex flex-col items-center justify-center bg-cover bg-center text-white relative"
-        style={{ backgroundImage: "url('src/assets/boy.jpg')" }}
+        style={{ backgroundImage: "url('/assets/boy.jpg')" }}
       >
         <div className="absolute top-8 left-8 text-2xl font-bold flex items-center">
           <div
             className="min-w-32 h-16 rounded-full flex justify-center mr-2 bg-cover bg-center"
-            style={{ backgroundImage: "url('src/assets/1.png')" }}
+            style={{ backgroundImage: "url('/assets/1.png')" }}
           ></div>
         </div>
       </div>
