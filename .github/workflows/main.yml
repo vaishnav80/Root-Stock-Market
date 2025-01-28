@@ -34,7 +34,7 @@ jobs:
       # Build postgres image if needed
       - name: Build and push db image
         run: |
-          docker build -t vaishnavpuzhakkal/my-repo:postgres -f Dockerfile.db .
+          docker build -t vaishnavpuzhakkal/my-repo:postgres -f ./Backend/Root/Dockerfile.db .
           docker push vaishnavpuzhakkal/my-repo:postgres
 
   deploy:
