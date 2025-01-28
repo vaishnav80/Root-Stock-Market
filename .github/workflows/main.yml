@@ -46,7 +46,7 @@ jobs:
         with:
           host: ${{ secrets.AWS_EC2_IP }}
           username: ubuntu
-          key: ${{ secrets.AWS_SSH_KEY }}
+          key: root.pem
           port: 22
           script: |
             cd /home/ubuntu
