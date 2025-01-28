@@ -150,8 +150,8 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 SITE_ID = 1  
-LOGIN_REDIRECT_URL = 'http://localhost:5173'  
-LOGOUT_REDIRECT_URL = 'http://localhost:5173/login'  
+LOGIN_REDIRECT_URL = 'https://www.rootstocks.site/'  
+LOGOUT_REDIRECT_URL = 'https://www.rootstocks.site/login'  
 
 
 ACCOUNT_EMAIL_VERIFICATION = "none"  
@@ -169,6 +169,7 @@ SOCIALACCOUNT_PROVIDERS = {
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'https://www.rootstocks.site/'
     
 ]
 

@@ -27,7 +27,7 @@ const UsersTable = () => {
   const handleEdit = async (id) => {
     console.log('Edit user:', id);
       try {     
-      const response = await axios.patch(`https://rootstocks/account/update/${id}/`, tempData, {
+      const response = await axios.patch(`https://api.rootstocks/account/update/${id}/`, tempData, {
         headers: {
           Authorization: `Bearer ${auth.token}`,
           "Content-Type": "multipart/form-data",

@@ -24,7 +24,7 @@ function Resetpassword() {
         }
     
         try {
-          const response = await axios.post("http://localhost:8000/account/reset-password/", {
+          const response = await axios.post("https://api.rootstocks.site/account/reset-password/", {
             uid,
             token,
             password: password1,
