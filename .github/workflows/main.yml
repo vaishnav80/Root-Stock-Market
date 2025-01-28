@@ -27,7 +27,7 @@ jobs:
       # Build web image with daphne
       - name: Build and push web image
         run: |
-          docker build --no-cache -t vaishnavpuzhakkal/my-repo:root-web
+          docker build --no-cache -t vaishnavpuzhakkal/my-repo:root-web .
           docker push vaishnavpuzhakkal/my-repo:root-web-${{ github.sha }}
           docker push vaishnavpuzhakkal/my-repo:root-web
 
