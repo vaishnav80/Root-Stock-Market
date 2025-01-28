@@ -12,7 +12,7 @@ const ChatWithAdmin = () => {
   useEffect(() => {
     console.log(auth.id);
 
-    ws.current = new WebSocket(`ws://api.rootstocks.site/ws/chat/?user_id=${auth.id}`);
+    ws.current = new WebSocket(`wss://api.rootstocks.site/ws/chat/?user_id=${auth.id}`);
     ws.current.onmessage = (event) => {
       const newMessage = JSON.parse(event.data);
       console.log(newMessage,'newsssss');

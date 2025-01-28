@@ -51,7 +51,7 @@ const StockApp = () => {
   const [loading,setLoading] = useState(false)
 
   useEffect(() => {
-    const socket = new WebSocket('ws://api.rootstocks.site/ws/data/');
+    const socket = new WebSocket('wss://api.rootstocks.site/ws/data/');
 
     socket.onmessage = (event) => {
       try {

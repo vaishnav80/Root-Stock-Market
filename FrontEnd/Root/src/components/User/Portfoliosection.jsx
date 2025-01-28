@@ -19,7 +19,7 @@ const PortfolioSection = () => {
     useEffect(()=>{
       const userId = auth.email
       setLoad(false)
-      const socket = new WebSocket(`ws://api.rootstocks.site/ws/Userdata/?user_id=${userId}`);
+      const socket = new WebSocket(`wss://api.rootstocks.site/ws/Userdata/?user_id=${userId}`);
       
       socket.onmessage = function(event) {
         const data = JSON.parse(event.data);
