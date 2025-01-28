@@ -44,6 +44,8 @@ const api = axios.create({
 
 export const order = async (token,company,price,quantity)=>{
    try {
+        console.log(token,price,quantity,company);
+        
             const response = api.post('order/order_data/',{
                 company,price,quantity,action
             },{
