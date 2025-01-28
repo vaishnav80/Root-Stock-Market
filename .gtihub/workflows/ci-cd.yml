@@ -4,14 +4,15 @@ on:
   push:
     branches:
       - main  
-    paths:
-      - 'Backend/**'
-      - 'requirements.txt'
-      - 'Dockerfile.web'
   pull_request:
     branches:
       - main 
 
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+  
 jobs:
   build:
     runs-on: ubuntu-latest
