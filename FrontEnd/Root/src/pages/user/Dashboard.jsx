@@ -55,7 +55,7 @@ const Dashboard = () => {
   const handleOrder=async(e)=>{
     
     e.preventDefault()
-    setLoading(true);
+
     console.log(auth.token,company,buyingPrice,quantity,'dashboard');
     
     const response = await order(auth.token,company,buyingPrice,quantity)
