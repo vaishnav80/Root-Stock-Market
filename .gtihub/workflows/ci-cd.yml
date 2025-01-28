@@ -2,15 +2,11 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [main]
+    paths:
+      - 'Backend/**'
   pull_request:
-    branches: [ "main" ]
-
-    
-permissions:
-  contents: write
-  packages: write
-  pull-requests: write
+    branches: [main]
 
 jobs:
   build:
