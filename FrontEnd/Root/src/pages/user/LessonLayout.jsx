@@ -101,7 +101,7 @@ const LessonLayout = () => {
                           <div className="w-2/4">
                 
                         <img
-                          src={`http://127.0.0.1:8000${content.image}`}
+                          src={`https://rootstocks.site${content.image}`}
                           alt={content.sub_heading}
                           className="rounded-lg shadow-lg"
                           />
