@@ -47,7 +47,7 @@ export const order = async (token,company,price,quantity)=>{
         console.log(token,price,quantity,company);
         
             const response = await api.post('order/order_data/',{
-                company,price,quantity,action
+                company,price,quantity
             },{
             headers :{
                 Authorization:`Bearer ${token}`

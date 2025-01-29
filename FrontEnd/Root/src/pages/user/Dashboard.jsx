@@ -60,7 +60,7 @@ const Dashboard = () => {
     
     const response = await order(auth.token,company,buyingPrice,quantity)
     console.log(response);
-    if(response.status ==201){
+    if(response && response.status ==201){
       setLoading(false)
       navigate('/portfolio')
     }
