@@ -44,7 +44,6 @@ class WatchLists(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self,request):
-        print('hai')
         company = request.data.get('company')
 
         API_KEY = "HXLHDDVTUTGJUUP2"
@@ -58,7 +57,7 @@ class WatchLists(APIView):
             for match in response['bestMatches']:
                 print(f"Symbol: {match['1. symbol']}, Name: {match['2. name']}")
                 symbols.append(match['1. symbol'])
-            # Filter and remove the '.BSE' extension
+         
             bse_symbols = [symbol.replace('.BSE', '') for symbol in symbols if symbol.endswith('.BSE')]
         except:
             return Response({
