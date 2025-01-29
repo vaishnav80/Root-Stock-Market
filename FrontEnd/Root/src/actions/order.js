@@ -51,12 +51,13 @@ export const order = async (token,company,price,quantity)=>{
             },{
             headers :{
                 Authorization:`Bearer ${token}`
-            } 
+            },
+            timeout: 5000
         })
         return response
 
    } catch (error) {
-    
+        console.log('error')
    }
    
 }
