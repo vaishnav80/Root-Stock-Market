@@ -21,7 +21,7 @@ class Orders(APIView):
         data['user_id'] = request.user.id
         data['totalAmount'] = data['price'] * int(data['quantity'])
         serializer = OrderSerializer(data = data)
-        print(serializer,'order ')
+        print(serializer,'orders ')
         if serializer.is_valid():
             serializer.save()
             wallet = Wallet.objects.get(user_id = request.user)
