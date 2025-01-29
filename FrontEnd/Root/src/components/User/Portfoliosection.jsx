@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { investment, sellOrder } from '../../actions/order';
 import LoadingPage from './LoadingPage';
 import { use } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 const PortfolioSection = () => {
@@ -16,6 +17,7 @@ const PortfolioSection = () => {
     const [quantity ,setQuantity] = useState(0)
     const [qty,setQty] = useState(0)
     const [error,setError] = useState("")
+    const navigate = useNavigate()
     useEffect(()=>{
       const userId = auth.email
       setLoad(false)
@@ -56,6 +58,7 @@ const PortfolioSection = () => {
       else{
         const response = await sellOrder(auth.token,company,price,qty,)
         console.log(response);
+        navigate('/order')
         setSell(false)
       }
     }
@@ -98,7 +101,7 @@ return (
         </div>
         <div className="text-xl mt-2">Total Value: ₹ {totalInvestment.toFixed(2)}</div>
         
-        
+        <div className="p-6 mt-3">
         <div className="overflow-x-auto  rounded">
           <table className="w-full">
             <thead>
@@ -124,6 +127,7 @@ return (
               )})}
             </tbody>
           </table>
+        </div>
         </div>
         <div className='flex mt-3'>
 
