@@ -54,7 +54,7 @@ const PortfolioSection = () => {
         setError('quantity exceeded than purchased')
       }
       else{
-        const response = await sellOrder(auth.token,company,price,quantity,)
+        const response = await sellOrder(auth.token,company,price,qty,)
         console.log(response);
         setSell(false)
       }

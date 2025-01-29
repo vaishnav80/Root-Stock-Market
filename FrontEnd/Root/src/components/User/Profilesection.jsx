@@ -100,14 +100,14 @@ const ProfileSection = () => {
     setTempData(profileData)
     setIsEditing(false);
   }; 
-  const imgs = `https://api.rootstocks.site${profileData.image}`
+  
   return (
     <div className=" p-6 bg-gray-900 h-full shadow-xl text-gray-100">
       <div className="relative mb-6">
        
       <div className="relative w-32 h-32 mx-auto mb-4">
   <img
-    src={imgs}
+    src={`https://api.rootstocks.site${profileData.image}`}
     alt="Profile"
     className="rounded-full w-full h-full object-cover border-4 border-gray-700"
   />

@@ -31,7 +31,6 @@ const OrderSection = () => {
             <thead>
               <tr className="bg-gray-800">
                 <th className="p-3 text-left">Stock/Asset</th>
-                <th className="p-3 text-left">Action</th>
                 <th className="p-3 text-left">Quantity</th>
                 <th className="p-3 text-left">Price</th>
                 <th className="p-3 text-left">Total Amount</th>
@@ -42,7 +41,6 @@ const OrderSection = () => {
               {order.map((stock, index) => (
                 <tr key={index} className="border-b border-gray-700">
                   <td className="p-3">{stock.company}</td>
-                  <td className="p-3">{stock.action}</td>
                   <td className="p-3">{stock.quantity}</td>
                   <td className="p-3">₹{stock.price}</td>
                   <td className="p-3">₹{stock.totalAmount}</td>
