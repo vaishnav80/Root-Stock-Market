@@ -12,31 +12,37 @@ class Analysis(APIView):
 
     permission_classes = [IsAuthenticated]
     def post(self,request):
-        company = request.data.get('company')
-        finnhub_client = finnhub.Client(api_key="cu5r78hr01qujm3p54d0cu5r78hr01qujm3p54dg")
-        print(company,'company')
-        articles = finnhub_client.company_news(company, _from="2024-12-01", to="2025-12-10")
-        lst = ''
-        print(articles)
-        if len(articles)<5:
-            n= len(articles)
-        else:
-            n = 5
-        for article in articles[0:n+1]:
-            print(article['headline'])
-            lst += article['headline']+' '
+        try:
+            company = request.data.get('company')
+            finnhub_client = finnhub.Client(api_key="cu5r78hr01qujm3p54d0cu5r78hr01qujm3p54dg")
+            print(company,'company')
+            articles = finnhub_client.company_news(company, _from="2024-12-01", to="2025-12-10")
+            lst = ''
+            print(articles)
+            if len(articles)<5:
+                n= len(articles)
+            else:
+                n = 5
+            for article in articles[0:n+1]:
+                print(article['headline'])
+                lst += article['headline']+' '
 
-        print(lst)
-        tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
-        model = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
-        pipe = pipeline("text-classification", model="ProsusAI/finbert",tokenizer=tokenizer)
-        sentence = [lst]
-        res = pipe(sentence)
-        print(res)
-        return Response({
-            "message" : "Analysis completed",
-            "data" : res
-        },status=status.HTTP_200_OK)
+            print(lst)
+            tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
+            model = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
+            pipe = pipeline("text-classification", model="ProsusAI/finbert",tokenizer=tokenizer)
+            sentence = [lst]
+            res = pipe(sentence)
+            print(res)
+            return Response({
+                "message" : "Analysis completed",
+                "data" : res
+            },status=status.HTTP_200_OK)
+        except:
+            return Response({
+                "message" : "logical error",
+               
+            },status=status.HTTP_400_BAD_REQUEST)
     
 
 class WatchLists(APIView):

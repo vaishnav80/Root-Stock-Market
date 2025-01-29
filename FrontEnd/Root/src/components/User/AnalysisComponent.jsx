@@ -16,9 +16,13 @@ const StockAnalysis = () => {
     
     const response = await postAnalayis(auth.token,companyName)
     console.log(response);
-    
-    const mockResponse = response.data.data[0];
-    setResult(mockResponse);
+    if (response.status == 200){
+      const mockResponse = response.data.data[0];
+      setResult(mockResponse);
+    }
+    else{
+      setResult(" ");
+    }
   };
 
   const getSentimentColor = (label) => {
@@ -42,7 +46,7 @@ const StockAnalysis = () => {
       case "neutral":
         return " Result :Neutral , It's you choice.. "; 
       default:
-        return "";
+        return "Result :Analysis is not available right now";
     }
   };
 
