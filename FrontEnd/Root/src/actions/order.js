@@ -46,7 +46,7 @@ export const order = async (token,company,price,quantity)=>{
    try {
         console.log(token,price,quantity,company);
         
-            const response = api.post('order/order_data/',{
+            const response = await api.post('order/order_data/',{
                 company,price,quantity,action
             },{
             headers :{
@@ -64,7 +64,7 @@ export const sellOrder = async (token,company,price,quantity)=>{
     try {
         console.log('selll');
         
-             const response = api.put('order/order_data/',{
+             const response = await api.put('order/order_data/',{
                  company,price,quantity
              },{
              headers :{
@@ -82,7 +82,7 @@ export const sellOrder = async (token,company,price,quantity)=>{
 
 export const getorder = async (token)=>{
     try {
-             const response = api.get('order/order_data/',{
+             const response = await api.get('order/order_data/',{
              headers :{
                  Authorization:`Bearer ${token}`
              } 
@@ -100,7 +100,7 @@ export const getorder = async (token)=>{
     try {
         console.log('investment action');
         
-        const response = api.get('order/invest/',{
+        const response = await api.get('order/invest/',{
             headers :{
                 Authorization : `Bearer ${token}`
             }
