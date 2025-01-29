@@ -64,6 +64,9 @@ const Dashboard = () => {
       setLoading(false)
       navigate('/portfolio')
     }
+    else{
+      setLoading(false)
+    }
     
   }
   useEffect(()=>{

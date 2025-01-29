@@ -57,7 +57,7 @@ export const order = async (token,company,price,quantity)=>{
         return response
 
    } catch (error) {
-        console.log('error')
+        console.log('error',error)
    }
    
 }
