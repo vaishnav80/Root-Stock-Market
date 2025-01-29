@@ -14,7 +14,7 @@ class Analysis(APIView):
     def post(self,request):
         company = request.data.get('company')
         finnhub_client = finnhub.Client(api_key="cu5r78hr01qujm3p54d0cu5r78hr01qujm3p54dg")
-        print(company)
+        print(company,'company')
         articles = finnhub_client.company_news(company, _from="2024-12-01", to="2025-12-10")
         lst = ''
         print(articles)
