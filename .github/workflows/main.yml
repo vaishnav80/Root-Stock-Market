@@ -42,30 +42,19 @@ jobs:
     needs: build
     steps:
       - name: SSH into EC2 and deploy
-        uses: appleboy/ssh-action@v0.1.1
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.AWS_EC2_IP }}
-          username: ubuntu
+          username: ubuntu           # Confirmed correct
           key: ${{ secrets.AWS_SSH_KEY }}
           port: 22
           script: |
-            cd /home/ubuntu
-            
-            # Pull the latest images
+            cd /home/ubuntu         # Confirmed correct path
+            pwd                     # Debug: print working directory
+            ls -la                  # Debug: list files
             docker pull vaishnavpuzhakkal/my-repo:root-web
             docker pull vaishnavpuzhakkal/my-repo:postgres
-            
-            # Stop and remove existing containers
             docker-compose down
-            
-            # Start with new images
             docker-compose up -d
-            
-            # Remove unused images
-            docker image prune -f
-            
-            # Check container status
             docker ps
-            
-            # Check web container logs
             docker logs root-web-1 --tail=50
