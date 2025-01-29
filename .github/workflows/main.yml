@@ -59,7 +59,7 @@ jobs:
           host: ${{ secrets.AWS_EC2_IP }}
           username: ubuntu
           key: ${{ secrets.AWS_SSH_KEY }}
-          source: "docker-compose.yml"
+          source: "Backend/Root/docker-compose.yml"
           target: "/home/ubuntu"
 
 
@@ -81,7 +81,7 @@ jobs:
             
             echo "Restarting Docker containers..."
             docker-compose down
-            docker-compose up -d
+            docker-compose up -d 
 
             echo "Checking running containers..."
             docker ps
