@@ -108,7 +108,7 @@ const LessonLayout = () => {
               )}
             </>
           ) : (
-            <p>Please select a lesson to view its contents.</p>
+            <p>Please select a lesson to view its contents...</p>
           )}
         </div>
       </div>
