@@ -1,7 +1,8 @@
 import React from 'react'
 import Header from '../../components/User/Header'
 import Profilesidebar from '../../components/User/Profilesidebar'
-import PortfolioSection from '../../components/User/PortfolioSection'
+import UserPortfolio from '../../components/User/UserPortfolio'
+
 
 
 
@@ -16,7 +17,7 @@ function Portfolio() {
         <Profilesidebar />
       </div>
       <div className="w-full md:w-3/4 h-full overflow-y-scroll">
-        <PortfolioSection />
+        <UserPortfolio/>
       </div>
     </div>
   </div>

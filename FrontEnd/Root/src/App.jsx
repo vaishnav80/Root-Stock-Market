@@ -12,7 +12,7 @@ import AdminLessons from './pages/admin/Lessons'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate } from 'react-router-dom'
 import { logout } from './redux/authSlice'
-import Resetpassword from './pages/user/ResetPassword'
+
 import Forgotpassword from './pages/user/ForgotPassword'
 import Wallet from './pages/user/Wallet'
 import Portfolio from './pages/user/Portfolio'
@@ -30,6 +30,7 @@ import EditLesson from './pages/admin/EditLesson'
 import Contactus from './pages/user/Contactus'
 import WatchList from './components/User/Watchlist'
 import WatchListPage from './pages/user/WatchList'
+import Resetpassword from './pages/user/Resetpasswords'
 
 function App() {
   const auth = useSelector((state)=>state.auth)
