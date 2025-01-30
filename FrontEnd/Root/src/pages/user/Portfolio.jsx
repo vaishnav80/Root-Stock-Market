@@ -5,6 +5,7 @@ import PortfolioSection from '../../components/User/portfoliosection'
 
 
 
+
 function Portfolio() {
   return (
     <div className='bg-gray-900'>
@@ -14,7 +15,7 @@ function Portfolio() {
         <Profilesidebar />
       </div>
       <div className="w-full md:w-3/4 h-full overflow-y-scroll">
-        <PortfolioSection/>
+        <PortfolioSection />
       </div>
     </div>
   </div>
