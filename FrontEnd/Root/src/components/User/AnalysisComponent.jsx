@@ -51,37 +51,36 @@ const StockAnalysis = () => {
   };
 
   return (
-    
-    <div className="bg-gray-900 text-gray-100 p-6 rounded-lg shadow-md max-w-md mx-auto mt-10">
-      <h1 className="text-2xl font-bold text-center">Stock Sentiment Analysis</h1>
-      <p className="text-gray-400 text-sm text-center mt-2">
+    <div className="bg-gray-900 text-gray-100 p-6 sm:p-8 md:p-10 rounded-lg shadow-md max-w-md md:max-w-lg lg:max-w-xl mx-auto mt-10">
+      <h1 className="text-2xl sm:text-3xl font-bold text-center">Stock Sentiment Analysis</h1>
+      <p className="text-gray-400 text-sm sm:text-base text-center mt-2">
         Analyze recent news about a company. This analysis is for demonstration purposes only and may not be accurate.
       </p>
-
+  
       <div className="mt-4">
         <input
           type="text"
-          className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-600"
+          className="w-full px-4 py-2 sm:py-3 bg-gray-800 border border-gray-700 rounded-md text-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-600"
           placeholder="Enter company name (e.g., Reliance)"
           value={companyName}  
           onChange={(e) => setCompanyName(e.target.value)}
         />
         <button
           onClick={analyzeCompany}
-          className="w-full mt-3 bg-gray-700 text-gray-100 py-2 rounded-md hover:bg-gray-600 transition"
+          className="w-full mt-3 bg-gray-700 text-gray-100 py-2 sm:py-3 rounded-md hover:bg-gray-600 transition"
         >
           Analyze
         </button>
       </div>
-
+  
       {result && (
-        <div className="mt-6 bg-gray-800 p-4 rounded-lg shadow">
-          <h2 className="text-lg font-bold text-gray-300">
+        <div className="mt-6 bg-gray-800 p-4 sm:p-6 rounded-lg shadow">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-300">
             Sentiment for: <span className="text-gray-100">{companyName || "N/A"}</span>
           </h2>
-
+  
           <div className="flex justify-center items-center mt-4">
-            <div style={{ width: 150, height: 150 }}>
+            <div className="w-[120px] sm:w-[150px] h-[120px] sm:h-[150px]">
               <CircularProgressbar
                 value={result.score * 100}
                 text={`${(result.score * 100).toFixed(1)}%`}
@@ -93,14 +92,17 @@ const StockAnalysis = () => {
               />
             </div>
           </div>
-
-          <p className={`mt-4 text-xl font-semibold text-center`} style={{ color: getSentimentColor(result.label) }}>
+  
+          <p
+            className="mt-4 text-lg sm:text-xl font-semibold text-center"
+            style={{ color: getSentimentColor(result.label) }}
+          >
             {getSentimentWords(result.label)}
           </p>
         </div>
       )}
-
-      <div className="mt-6 text-sm text-gray-400">
+  
+      <div className="mt-6 text-sm sm:text-base text-gray-400">
         <p>
           <strong>Note:</strong> The result is based on simplified analysis and
           should not be considered as financial advice. Always perform in-depth research
@@ -109,6 +111,7 @@ const StockAnalysis = () => {
       </div>
     </div>
   );
+  
 };
 
 export default StockAnalysis;

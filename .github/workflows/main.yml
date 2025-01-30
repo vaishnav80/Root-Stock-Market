@@ -31,7 +31,7 @@ jobs:
           docker push vaishnavpuzhakkal/my-repo:root-web
           docker push vaishnavpuzhakkal/my-repo:root-web
 
-      # Build postgres image if needed
+      # Build postgres image 
       - name: Build and push db image
         run: |
           docker build -t vaishnavpuzhakkal/my-repo:postgres -f ./Backend/Root/Dockerfile .

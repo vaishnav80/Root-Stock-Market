@@ -9,7 +9,7 @@ from django.contrib.auth import get_user_model
 class TestRegisterView:
     def setup_method(self):
         self.client = APIClient()
-        self.register_url = reverse('register')  # Ensure this matches your URL name
+        self.register_url = reverse('register')  
 
     def test_successful_registration(self):
         data = {

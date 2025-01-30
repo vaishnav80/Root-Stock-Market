@@ -183,93 +183,93 @@ const CallInterface = ({ callType, remoteUser, onEndCall, ws }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-gray-800 rounded-lg p-4 w-full max-w-4xl">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-white">
-            {callType === 'video' ? 'Video' : 'Audio'} Call
-          </h2>
-          <button
-            onClick={handleEndCall}
-            className="p-2 hover:bg-gray-700 rounded-full"
-          >
-            <X className="w-6 h-6 text-red-500" />
-          </button>
-        </div>
-
-        <div className="relative">
-          {callType === 'video' ? (
-            <div className="grid grid-cols-2 gap-4">
-              <div className="relative">
-                <video
-                  ref={remoteVideoRef}
-                  autoPlay
-                  playsInline
-                  className="w-full h-64 rounded-lg bg-gray-700 object-cover"
-                />
-                <div className="absolute bottom-4 left-4">
-                  <p className="text-white bg-gray-900 bg-opacity-75 px-2 py-1 rounded">
-                   Remote User
-                  </p>
-                </div>
-              </div>
-              <div className="relative">
-                <video
-                  ref={localVideoRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  className="w-full h-64 rounded-lg bg-gray-700 object-cover"
-                />
-                <div className="absolute bottom-4 left-4">
-                  <p className="text-white bg-gray-900 bg-opacity-75 px-2 py-1 rounded">
-                    You
-                  </p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center h-64 bg-gray-700 rounded-lg">
-              <div className="text-center text-white">
-                <div className="w-20 h-20 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  {remoteUser.name?.[0] || '?'}
-                </div>
-                <h3 className="text-xl font-semibold">{remoteUser.name || 'Remote User'}</h3>
-                <p className="text-gray-400">
-                  {isConnected ? 'Connected' : 'Connecting...'}
-                </p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="flex justify-center space-x-4 mt-4">
-          <button
-            onClick={toggleMute}
-            className={`p-4 rounded-full ${isMuted ? 'bg-red-500' : 'bg-gray-700'} hover:opacity-90 transition-opacity`}
-          >
-            {isMuted ? (
-              <MicOff className="w-6 h-6 text-white" />
-            ) : (
-              <Mic className="w-6 h-6 text-white" />
-            )}
-          </button>
-          
-          {callType === 'video' && (
-            <button
-              onClick={toggleVideo}
-              className={`p-4 rounded-full ${isVideoOff ? 'bg-red-500' : 'bg-gray-700'} hover:opacity-90 transition-opacity`}
-            >
-              {isVideoOff ? (
-                <VideoOff className="w-6 h-6 text-white" />
-              ) : (
-                <VideoIcon className="w-6 h-6 text-white" />
-              )}
-            </button>
-          )}
-        </div>
-      </div>
+    <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-4 sm:p-6">
+  <div className="bg-gray-800 rounded-lg p-4 w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-4xl">
+    <div className="flex justify-between items-center mb-4">
+      <h2 className="text-lg sm:text-xl font-semibold text-white">
+        {callType === 'video' ? 'Video' : 'Audio'} Call
+      </h2>
+      <button
+        onClick={handleEndCall}
+        className="p-2 hover:bg-gray-700 rounded-full"
+      >
+        <X className="w-5 h-5 sm:w-6 sm:h-6 text-red-500" />
+      </button>
     </div>
+
+    <div className="relative">
+      {callType === 'video' ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="relative">
+            <video
+              ref={remoteVideoRef}
+              autoPlay
+              playsInline
+              className="w-full h-52 sm:h-64 md:h-72 rounded-lg bg-gray-700 object-cover"
+            />
+            <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4">
+              <p className="text-white bg-gray-900 bg-opacity-75 px-2 py-1 rounded text-xs sm:text-sm">
+                Remote User
+              </p>
+            </div>
+          </div>
+          <div className="relative">
+            <video
+              ref={localVideoRef}
+              autoPlay
+              playsInline
+              muted
+              className="w-full h-52 sm:h-64 md:h-72 rounded-lg bg-gray-700 object-cover"
+            />
+            <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4">
+              <p className="text-white bg-gray-900 bg-opacity-75 px-2 py-1 rounded text-xs sm:text-sm">
+                You
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center h-52 sm:h-64 md:h-72 bg-gray-700 rounded-lg">
+          <div className="text-center text-white">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              {remoteUser.name?.[0] || '?'}
+            </div>
+            <h3 className="text-lg sm:text-xl font-semibold">{remoteUser.name || 'Remote User'}</h3>
+            <p className="text-gray-400 text-sm sm:text-base">
+              {isConnected ? 'Connected' : 'Connecting...'}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+
+    <div className="flex justify-center space-x-4 mt-4">
+      <button
+        onClick={toggleMute}
+        className={`p-3 sm:p-4 rounded-full ${isMuted ? 'bg-red-500' : 'bg-gray-700'} hover:opacity-90 transition-opacity`}
+      >
+        {isMuted ? (
+          <MicOff className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+        ) : (
+          <Mic className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+        )}
+      </button>
+
+      {callType === 'video' && (
+        <button
+          onClick={toggleVideo}
+          className={`p-3 sm:p-4 rounded-full ${isVideoOff ? 'bg-red-500' : 'bg-gray-700'} hover:opacity-90 transition-opacity`}
+        >
+          {isVideoOff ? (
+            <VideoOff className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          ) : (
+            <VideoIcon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+          )}
+        </button>
+      )}
+    </div>
+  </div>
+</div>
   );
 };
 

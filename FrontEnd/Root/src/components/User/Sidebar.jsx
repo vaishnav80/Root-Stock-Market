@@ -92,27 +92,31 @@ const StockApp = () => {
 
   return (
     <div className="bg-black min-h-screen p-6">
-      <Header />
-      <div className="space-y-4">
-        {loading? Object.keys(stockData).map((ticker) => (
-          <StockItem
-            key={ticker}
-            name={ticker}
-            price={stockData[ticker]}
-            change={calculateChange(ticker)}
+  <Header />
+  <div className="space-y-4">
+    {loading ? (
+      Object.keys(stockData).map((ticker) => (
+        <StockItem
+          key={ticker}
+          name={ticker}
+          price={stockData[ticker]}
+          change={calculateChange(ticker)}
+        />
+      ))
+    ) : (
+      <div className="flex justify-center items-center h-[400px]">
+        <div className="flex items-center justify-center">
+          <img
+            src="/assets/1.png"
+            alt="Loading"
+            className="w-20 h-20 animate-bounce"
           />
-        )):<div className=" flex justify-center items-center h-[400px]">
-        <div className="flex items-center justify-center ">
-     
-     <img
-       src="/assets/1.png"
-       alt="Loading"
-       className="w-20 h-20 animate-bounce"
-     />
-   </div>
-      </div>}
+        </div>
       </div>
-    </div>
+    )}
+  </div>
+</div>
+
   );
 };
 

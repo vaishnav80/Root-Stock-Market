@@ -8,15 +8,15 @@ function Profile() {
     const user = useSelector((action)=>{action.auth})
   return (
     <>
-    <Header/>
-    <div className="flex">
-      <div className="w-1/4">
-        <Profilesidebar />
-      </div>
-      <div className="w-3/4">
-        <ProfileSection />
-      </div>
-    </div>
+   <Header/>
+<div className="flex flex-col md:flex-row">
+  <div className="w-full md:w-1/4">
+    <Profilesidebar />
+  </div>
+  <div className="w-full md:w-3/4">
+    <ProfileSection />
+  </div>
+</div>
     </>
   );
 }

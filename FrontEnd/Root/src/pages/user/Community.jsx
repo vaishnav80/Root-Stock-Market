@@ -5,9 +5,11 @@ import ChatInterface from '../../components/User/chatCommunity'
 
 function Community() {
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col min-h-screen">
   <Header />
-  <ChatInterface />
+  <div className="flex-1 overflow-auto">
+    <ChatInterface />
+  </div>
 </div>
 
   )

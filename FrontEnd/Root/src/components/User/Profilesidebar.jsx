@@ -18,33 +18,40 @@ function Profilesidebar() {
     }
   };
   return (
-    <div className="bg-gray-800 h-screen p-4 flex flex-col ">
-      <Link to={'/portfolio'}>
-      <button className="w-full py-5 my-5 mt-8 text-white border border-gray-500 rounded">
-        Portfolio
-      </button></Link>
-      <Link to={'/order'}>
-      <button className="w-full py-5 my-5 text-white border border-gray-500 rounded">
-        Orders
-      </button></Link>
-      <Link to={'/watchlist'}>
-      <button className="w-full py-5 my-5 text-white border border-gray-500 rounded">
-        Watchlist
-      </button>
-      </Link>
-      <Link to={'/wallet'}>
-      <button className="w-full py-5 my-5 text-white border border-gray-500 rounded">
-        Wallet
-      </button></Link>
-      <Link to={'/contactus'}>
-      <button className="w-full py-5 my-5 text-white border border-gray-500 rounded">
-        Contact us
-      </button>
-      </Link>
-      <button className="w-full py-5 my-5 text-white border border-gray-500 rounded" onClick={logoutHandler}>
-        LogOut
-      </button>
-    </div>
+    <div className="bg-gray-800 h-screen p-4 flex flex-col space-y-5">
+  <Link to={'/portfolio'}>
+    <button className="w-full py-5 text-white border border-gray-500 rounded hover:bg-gray-700">
+      Portfolio
+    </button>
+  </Link>
+  <Link to={'/order'}>
+    <button className="w-full py-5 text-white border border-gray-500 rounded hover:bg-gray-700">
+      Orders
+    </button>
+  </Link>
+  <Link to={'/watchlist'}>
+    <button className="w-full py-5 text-white border border-gray-500 rounded hover:bg-gray-700">
+      Watchlist
+    </button>
+  </Link>
+  <Link to={'/wallet'}>
+    <button className="w-full py-5 text-white border border-gray-500 rounded hover:bg-gray-700">
+      Wallet
+    </button>
+  </Link>
+  <Link to={'/contactus'}>
+    <button className="w-full py-5 text-white border border-gray-500 rounded hover:bg-gray-700">
+      Contact us
+    </button>
+  </Link>
+  <button 
+    className="w-full py-5 text-white border border-gray-500 rounded hover:bg-gray-700" 
+    onClick={logoutHandler}
+  >
+    LogOut
+  </button>
+</div>
+
   );
 }
 

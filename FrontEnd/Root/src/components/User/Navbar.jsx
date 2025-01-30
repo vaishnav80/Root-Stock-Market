@@ -13,22 +13,23 @@ const Navbar = () => {
 
   return (
     <div className="bg-black py-4 w-full">
-      <div className="flex justify-center space-x-8">
-        {menuItems.map((item, index) => (
-          <Link
-            key={index}
-            to={item.path}
-            className={`px-6 py-2 text-white text-sm font-medium ${
-              item.isActive
-                ? 'border border-white rounded-full'
-                : 'hover:text-gray-400'
-            }`}
-          >
-            {item.name}
-          </Link>
-        ))}
-      </div>
-    </div>
+  <div className="flex flex-wrap justify-center space-x-8 sm:space-x-4">
+    {menuItems.map((item, index) => (
+      <Link
+        key={index}
+        to={item.path}
+        className={`px-6 py-2 text-white text-sm font-medium ${
+          item.isActive
+            ? 'border border-white rounded-full'
+            : 'hover:text-gray-400'
+        }`}
+      >
+        {item.name}
+      </Link>
+    ))}
+  </div>
+</div>
+
   );
 };
 

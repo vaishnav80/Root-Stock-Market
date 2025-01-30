@@ -7,16 +7,16 @@ function Wallet() {
   return (
   
     <div className='bg-gray-900'>
-  <Header />
-  <div className="flex h-screen">
-    <div className="w-1/4 h-full bg-gray-100">
-      <Profilesidebar />
-    </div>
-    <div className="w-3/4 h-full overflow-y-scroll">
-      <WalletSection />
+    <Header />
+    <div className="flex flex-col sm:flex-row h-screen">
+      <div className="w-full sm:w-1/4 h-full bg-gray-100">
+        <Profilesidebar />
+      </div>
+      <div className="w-full sm:w-3/4 h-full overflow-y-scroll">
+        <WalletSection />
+      </div>
     </div>
   </div>
-</div>
     
   )
 }

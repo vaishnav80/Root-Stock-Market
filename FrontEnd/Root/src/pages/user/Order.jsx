@@ -5,13 +5,13 @@ import Header from '../../components/User/Header'
 
 function Order() {
   return (
-    <div className='bg-gray-900'>
+<div className='bg-gray-900'>
   <Header />
-  <div className="flex h-screen">
-    <div className="w-1/4 h-full bg-gray-100">
+  <div className="flex h-screen flex-col md:flex-row">
+    <div className="w-full md:w-1/4 h-full bg-gray-100">
       <Profilesidebar />
     </div>
-    <div className="w-3/4 h-full overflow-y-scroll">
+    <div className="w-full md:w-3/4 h-full overflow-y-scroll">
       <OrderSection />
     </div>
   </div>

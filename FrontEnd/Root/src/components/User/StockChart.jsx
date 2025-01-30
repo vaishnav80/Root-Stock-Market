@@ -167,58 +167,58 @@ const RealTimeGraph = () => {
 
   return (
     <div className="p-4">
-      <div className="mb-4">
-        <form onSubmit={handleSubmit} className="flex gap-4 items-end">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Ticker</label>
-            <input
-              type="text"
-              value={inputStock.ticker}
-              onChange={(e) => setInputStock(prev => ({ ...prev, ticker: e.target.value.toUpperCase() }))}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-              placeholder="TCS"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Exchange</label>
-            <input
-              type="text"
-              value={inputStock.exchange}
-              onChange={(e) => setInputStock(prev => ({ ...prev, exchange: e.target.value.toUpperCase() }))}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-              placeholder="NSE"
-            />
-          </div>
-          <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Update Stock
-          </button>
-        </form>
+  <div className="mb-4">
+    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 items-end">
+      <div className="flex-1">
+        <label className="block text-sm font-medium text-gray-700">Ticker</label>
+        <input
+          type="text"
+          value={inputStock.ticker}
+          onChange={(e) => setInputStock(prev => ({ ...prev, ticker: e.target.value.toUpperCase() }))}
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+          placeholder="TCS"
+        />
       </div>
-      
-      <div className="text-sm text-gray-600 mb-4">
-        Status: {status}
+      <div className="flex-1">
+        <label className="block text-sm font-medium text-gray-700">Exchange</label>
+        <input
+          type="text"
+          value={inputStock.exchange}
+          onChange={(e) => setInputStock(prev => ({ ...prev, exchange: e.target.value.toUpperCase() }))}
+          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+          placeholder="NSE"
+        />
       </div>
-      
-      <div className="h-[400px]">
-      {load ? (
-        <Line data={data} options={options} />
-      ) : (
-        <div className="flex justify-center items-center h-[400px]">
-   <div className="flex items-center justify-center ">
-     
-      <img
-        src="/assets/1.png"
-        alt="Loading"
-        className="w-20 h-20 animate-bounce"
-      />
-    </div>
+      <button
+        type="submit"
+        className="w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+      >
+        Update Stock
+      </button>
+    </form>
+  </div>
+
+  <div className="text-sm text-gray-600 mb-4">
+    Status: {status}
+  </div>
+
+  <div className="h-[400px]">
+    {load ? (
+      <Line data={data} options={options} />
+    ) : (
+      <div className="flex justify-center items-center h-[400px]">
+        <div className="flex items-center justify-center">
+          <img
+            src="/assets/1.png"
+            alt="Loading"
+            className="w-20 h-20 animate-bounce"
+          />
+        </div>
+      </div>
+    )}
+  </div>
 </div>
-      )}
-    </div>
-    </div>
+
   );
 };
 

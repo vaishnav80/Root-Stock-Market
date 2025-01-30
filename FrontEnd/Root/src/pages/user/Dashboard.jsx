@@ -78,152 +78,115 @@ const Dashboard = () => {
   },[])
   
   return (
-    <context.Provider value={{ setTick, tick,setBuyingPrice,setCompany }}>
-      {!loading?(
-      <div className="bg-black">
-        <Header className="mt-96" />
-        <div className="flex">
-          <div className="w-96 mt-2">
-            <Sidebar />
+    <context.Provider value={{ setTick, tick, setBuyingPrice, setCompany }}>
+  {!loading ? (
+    <div className="bg-black">
+      <Header className="mt-8" />
+
+      <div className="flex flex-col lg:flex-row">
+        <div className="w-full lg:w-96 mt-2">
+          <Sidebar />
+        </div>
+        
+        <div className="mx-4 lg:mx-12 mt-4 flex-grow">
+          <StockChart />
+
+          <div className="flex justify-center mt-4">
+            <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" onClick={toggleModal}>
+              Try Paper Trading
+            </button>
           </div>
-          <div className="mx-12 mt-4 flex-grow">
-            
-            <StockChart />
 
-            <div className="flex justify-center mt-4">
-              <button
-                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                onClick={toggleModal}
-              >
-                Try Papper Trading
-              </button>
-            </div>
+          {isModalOpen && wallet !== null && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-gray-800 p-6 rounded shadow-lg w-full sm:w-3/4 md:w-1/2 lg:w-1/3 text-white">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-lg font-semibold">{company}</h2>
+                  <button onClick={toggleModal} className="text-gray-400 hover:text-white">
+                    &times;
+                  </button>
+                </div>
+                <div className="text-sm text-gray-400 mb-4">
+                  <div className="flex justify-between">
+                    <span>₹ {buyingPrice} NSE</span>
+                    <span>-6.45 (-0.32%)</span>
+                  </div>
+                </div>
+                <form onSubmit={handleOrder}>
+                  <div className="mb-4">
+                    <label className="block text-gray-300 font-medium mb-1">Order Type</label>
+                    <div className="flex space-x-2">
+                      <button type="button" className="flex-1 bg-gray-700 px-4 py-2 rounded text-center hover:bg-gray-600">
+                        Delivery (long term)
+                      </button>
+                      <button type="button" className="flex-1 bg-gray-700 px-4 py-2 rounded text-center hover:bg-gray-600">
+                        Intraday (same day)
+                      </button>
+                    </div>
+                  </div>
 
-    
-            {isModalOpen && wallet !== null && (
-              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                <div className="bg-gray-800 p-6 rounded shadow-lg w-1/3 text-white">
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold">{company}</h2>
-                    <button
-                      onClick={toggleModal}
-                      className="text-gray-400 hover:text-white"
-                    >
-                      &times;
-                    </button>
-                  </div>
-                  <div className="text-sm text-gray-400 mb-4">
-                    <div className="flex justify-between">
-                      <span>₹ {buyingPrice} NSE</span>
-                      <span>-6.45 (-0.32%)</span>
-                    </div>
-                    {/* <div className="flex justify-between">
-                      <span>1,992.45 BSE</span>
-                      <span></span>
-                    </div> */}
-                  </div>
-                  <form onSubmit={handleOrder}>
-                    <div className="mb-4">
-                      <label className="block text-gray-300 font-medium mb-1">
-                        Order Type
-                      </label>
-                      <div className="flex space-x-2">
-                        <button
-                          type="button"
-                          className="flex-1 bg-gray-700 px-4 py-2 rounded text-center hover:bg-gray-600"
-                        >
-                          Delivery (long term)
-                        </button>
-                        <button
-                          type="button"
-                          className="flex-1 bg-gray-700 px-4 py-2 rounded text-center hover:bg-gray-600"
-                        >
-                          Intraday (same day)
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex justify-between mb-4">
-                      <div className="w-1/2 pr-2">
-                        <label
-                          htmlFor="quantity"
-                          className="block text-gray-300 font-medium mb-1"
-                        >
-                          Quantity
-                        </label>
-                        <div className="flex items-center border border-gray-700 rounded px-2">
-                          
-                          <input
-                            type="number"
-                            id="quantity"
-                            className="bg-transparent text-white w-full text-center"
-                            value={quantity}
-                            onChange={(e)=>setQuantity(e.target.value)}
-                          />
-                        </div>
-                      </div>
-                      <div className="w-1/2 pl-2">
-                        <label
-                          htmlFor="price"
-                          className="block text-gray-300 font-medium mb-1"
-                        >
-                          Price
-                        </label>
+                  <div className="flex flex-col md:flex-row justify-between mb-4">
+                    <div className="w-full md:w-1/2 pr-2">
+                      <label htmlFor="quantity" className="block text-gray-300 font-medium mb-1">Quantity</label>
+                      <div className="flex items-center border border-gray-700 rounded px-2">
                         <input
-                          type="text"
-                          id="price"
-                          className="bg-gray-700 text-white w-full px-2 py-1 rounded"
-                          value="Market"
-                          readOnly
+                          type="number"
+                          id="quantity"
+                          className="bg-transparent text-white w-full text-center"
+                          value={quantity}
+                          onChange={(e) => setQuantity(e.target.value)}
                         />
                       </div>
-                    
                     </div>
-                    
-                    <div className="flex justify-between text-gray-400 text-sm mb-4">
-                      <span>Required:₹  {buyingPrice * quantity} </span>
-                      <span>Available:₹  {wallet}</span>
+                    <div className="w-full md:w-1/2 pl-2 mt-4 md:mt-0">
+                      <label htmlFor="price" className="block text-gray-300 font-medium mb-1">Price</label>
+                      <input
+                        type="text"
+                        id="price"
+                        className="bg-gray-700 text-white w-full px-2 py-1 rounded"
+                        value="Market"
+                        readOnly
+                      />
                     </div>
-                    {buyingPrice * quantity > wallet ? (
-                      <p className="text-red-500">Insufficient Balance</p>
-                    ) : (
-                      <button
-                        type="submit"
-                        className="w-full bg-green-500 px-4 py-2 rounded text-center hover:bg-green-600"
-                      >
-                        Invest
-                      </button>
-                    )}
-                  </form>
-                </div>
+                  </div>
+
+                  <div className="flex justify-between text-gray-400 text-sm mb-4">
+                    <span>Required:₹ {buyingPrice * quantity}</span>
+                    <span>Available:₹ {wallet}</span>
+                  </div>
+                  {buyingPrice * quantity > wallet ? (
+                    <p className="text-red-500">Insufficient Balance</p>
+                  ) : (
+                    <button type="submit" className="w-full bg-green-500 px-4 py-2 rounded text-center hover:bg-green-600">
+                      Invest
+                    </button>
+                  )}
+                </form>
               </div>
-            )}
-            
-            
-                   
-            <div className="flex space-x-4">
-            <div className="w-1/2 mt-14">
-              <h1 className="text-white text-2xl font-semibold text-center mb-4">
-                Watchlist
-              </h1>
+            </div>
+          )}
+
+          <div className="flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-4 mt-14">
+            <div className="w-full lg:w-1/2">
+              <h1 className="text-white text-2xl font-semibold text-center mb-4">Watchlist</h1>
               <WatchList />
             </div>
-              <div className="w-1/2">
-                <div className="p-4 rounded-lg shadow-lg h-[400px]">
-                  <CompanyGraph />
-                </div>
+            <div className="w-full lg:w-1/2">
+              <div className="p-4 rounded-lg shadow-lg h-[400px]">
+                <CompanyGraph />
               </div>
             </div>
           </div>
         </div>
-        
       </div>
-      ):
-      (
-        <div className="bg-black w-screen h-screen">
-        <LoadingPage />
-      </div>
-          )}
-    </context.Provider>
+    </div>
+  ) : (
+    <div className="bg-black w-screen h-screen">
+      <LoadingPage />
+    </div>
+  )}
+</context.Provider>
+
   );
 };
 

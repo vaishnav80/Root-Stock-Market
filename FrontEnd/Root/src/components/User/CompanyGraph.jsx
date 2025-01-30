@@ -90,49 +90,51 @@ const CompanyGraph = () => {
   }, []);
 
   return (
-    <div className=" flex flex-col items-center justify-center w-full rounded-lg shadow-lg">
-      {/* Company Info */}
-      <div className="flex items-center space-x-4 text-gray-200 mb-6">
-        <img
-          src={company.logo}
-          alt={`${company.name} Logo`}
-          className="w-16 h-16 object-cover"
-        />
-        <h1 className="text-2xl font-bold">{company.name}</h1>
-      </div>
-
-      {/* Chart */}
-      <div className="w-full bg-gray-800 ">
-        {loading ? (
-          <p className="text-gray-300 text-center">Loading data...</p>
-        ) : (
-          <Line
-            data={chartData}
-            options={{
-              responsive: true,
-              plugins: {
-                legend: {
-                  display: true,
-                  position: "top",
-                  labels: { color: "#fff" },
-                },
-                tooltip: { mode: "index", intersect: false },
-              },
-              scales: {
-                x: {
-                  grid: { color: "rgba(255, 255, 255, 0.1)" },
-                  ticks: { color: "#fff" },
-                },
-                y: {
-                  grid: { color: "rgba(255, 255, 255, 0.1)" },
-                  ticks: { color: "#fff" },
-                },
-              },
-            }}
-          />
-        )}
-      </div>
+    <div className="flex flex-col items-center justify-center w-full max-w-3xl mx-auto p-4 sm:p-6 md:p-8 bg-gray-900 rounded-lg shadow-lg">
+    
+    <div className="flex items-center space-x-4 text-gray-200 mb-6">
+      <img
+        src={company.logo}
+        alt={`${company.name} Logo`}
+        className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-full"
+      />
+      <h1 className="text-xl sm:text-2xl font-bold">{company.name}</h1>
     </div>
+  
+   
+    <div className="w-full bg-gray-800 rounded-lg p-4 sm:p-6">
+      {loading ? (
+        <p className="text-gray-300 text-center">Loading data...</p>
+      ) : (
+        <Line
+          data={chartData}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: true,
+                position: "top",
+                labels: { color: "#fff" },
+              },
+              tooltip: { mode: "index", intersect: false },
+            },
+            scales: {
+              x: {
+                grid: { color: "rgba(255, 255, 255, 0.1)" },
+                ticks: { color: "#fff" },
+              },
+              y: {
+                grid: { color: "rgba(255, 255, 255, 0.1)" },
+                ticks: { color: "#fff" },
+              },
+            },
+          }}
+        />
+      )}
+    </div>
+  </div>
+  
   );
 };
 
