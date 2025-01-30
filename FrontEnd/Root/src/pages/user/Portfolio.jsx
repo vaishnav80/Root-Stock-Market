@@ -1,7 +1,8 @@
 import React from 'react'
 import Header from '../../components/User/Header'
 import Profilesidebar from '../../components/User/Profilesidebar'
-import PortfolioSection from '../../components/User/portfoliosection'
+import PortfolioSection from '../../components/User/PortfolioSection'
+
 
 
 
